@@ -1,0 +1,95 @@
+Base_URL -> "http://localhost:4000/api/"
+
+Admin Api Routes ->
+Signup -> Base_URL/admin/signup
+Login -> Base_URL/admin/login
+Show All Admins -> Base_URL/admin/get-admins
+Delete Admin -> Base_URL/admin/:id
+
+DEMO DATA
+{
+    "Name": "admin",
+    "Password": "abc123123",
+    "CNIC": "4254144241",
+    "Email": "admin@exapmle.com",
+    "PhoneNo": "3424241"
+}
+
+--------------------------------------------------------------------------
+
+Student Api Routes ->
+Add -> Base_URL/student/add
+Login -> Base_URL/student/login
+Show All Student -> Base_URL/student/get-students
+Delete Student -> Base_URL/student/:id
+
+DEMO DATA
+{
+  "Std_Name": "Fatima Faisal",
+  "Std_Email": "fatima.faisal@example.com",
+  "Std_B_Form": "35202-7654321-1",
+  "Std_DOB": "2009-04-12",
+  "Batch": "2024-A",
+  "Session": "Morning",
+  "RollNo": "2004",
+  "GuardianContact": "03007654321",
+  "Password": "abc123123",
+  "Type": "Regular",
+  "Status": "Inactive",
+  "StdImages": "uploads/fatima-ali.jpg",
+  "ClassID": "8",   
+  "Religion": "Islam",
+  "Gender": "Female",
+  "Address": "House #5, Street 10, Karachi",
+  "GuardianName": "Mr. Ali"
+}
+
+--------------------------------------------------------------------------
+Teacher Api Routes ->
+Add -> Base_URL/teacher/add
+Login -> Base_URL/teacher/login
+Show All Teacher -> Base_URL/teacher/get-teachers
+Delete Teacher -> Base_URL/teacher/:id
+
+DEMO DATA
+{
+  "TeacherName": "Ayesha Raza",
+  "TeacherEmail": "ayesha@example.com",
+  "Password": "abc123123",
+  "TeacherDOB": "1985-09-21",
+  "TeacherPhoneNo": "03111234567",
+  "TeacherStatus": "Active",
+  "TeacherType": "Senior",
+  "TeacherImage": "uploads/ayesha.jpg",
+  "TeacherCNIC": "35202-1234567-8",
+  "Religion": "Islam",
+  "Gender": "Female",
+  "Address": "Lahore, Pakistan",
+  "subjectID": ["1", "3","5","6"]
+}
+
+--------------------------------------------------------------------------
+
+Class Api Routes ->
+Add -> Base_URL/class/add
+Show All Class -> Base_URL/class/get-classes
+Delete Class -> Base_URL/class/:id
+
+DEMO DATA 
+{
+ "ClassName":"8"
+}
+--------------------------------------------------------------------------
+
+Subject Api Routes ->
+Add -> Base_URL/subject/add
+Show All Subject -> Base_URL/subject/get-subjects
+Delete Subject -> Base_URL/subject/:id
+
+DEMO DATA
+{
+    "SubjectName": "Computer Science",
+    "SubjectCode": "1102",
+    "ClassID": "2"
+}
+--------------------------------------------------------------------------
