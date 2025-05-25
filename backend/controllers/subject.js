@@ -1,53 +1,37 @@
+/** @format */
+
 const db = require("../connection");
 
 const addSubject = (req, res) => {
-  const { SubjectName, SubjectCode, ClassName } = req.body;
+  const { SubjectName, SubjectCode, ClassID } = req.body;
+  console.log(req.body);
 
   // Step 1: Find ClassID from ClassName
   db.query(
-    "SELECT ClassID FROM ClassTable WHERE ClassName = ?",
-    [ClassName],
+    "SELECT * FROM SubjectTable WHERE SubjectCode = ?",
+    [SubjectCode],
     (err, results) => {
       if (err) {
         return res.status(500).json({ error: "Failed to fetch ClassID" });
       }
 
-      if (results.length === 0) {
-        return res.status(400).json({ error: "Class not found" });
+      if (results.length > 0) {
+        return res.status(400).json({ error: "Subject Code already register" });
       }
-
-      const ClassID = results[0].ClassID;
-
-      // Step 2: Insert subject with found ClassID
       db.query(
-        "SELECT * FROM SubjectTable WHERE SubjectCode = ?",
-        [SubjectCode],
-        (err, results) => {
-          if (err) {
-            return res.status(500).json({ error: "Failed to fetch ClassID" });
-          }
-
-          if (results.length > 0) {
+        "INSERT INTO SubjectTable (SubjectName, SubjectCode, ClassID) VALUES (?, ?, ?)",
+        [SubjectName, SubjectCode, ClassID],
+        (insertErr, result) => {
+          if (insertErr) {
             return res
-              .status(400)
-              .json({ error: "Subject Code already register" });
+              .status(500)
+              .json({ error: "Failed to add subject", errMsg: insertErr });
           }
-          db.query(
-            "INSERT INTO SubjectTable (SubjectName, SubjectCode, ClassID) VALUES (?, ?, ?)",
-            [SubjectName, SubjectCode, ClassID],
-            (insertErr, result) => {
-              if (insertErr) {
-                return res
-                  .status(500)
-                  .json({ error: "Failed to add subject", errMsg: insertErr });
-              }
 
-              res.status(201).json({
-                message: "Subject added successfully",
-                subjectId: result.insertId,
-              });
-            }
-          );
+          res.status(201).json({
+            message: "Subject added successfully",
+            subjectId: result.insertId,
+          });
         }
       );
     }

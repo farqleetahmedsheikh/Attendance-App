@@ -1,9 +1,10 @@
+/** @format */
+
 const db = require("../connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY || "your-secret-key";
-
 const handleAdminSignup = async (req, res) => {
   const { Name, Password, CNIC, Email, PhoneNo } = req.body;
   if (!Name || !Password || !CNIC || !Email || !PhoneNo) {
@@ -75,10 +76,9 @@ const handleAdminLogin = async (req, res) => {
           { userId: admin.AdminID, role: "admin" },
           SECRET_KEY,
           {
-            expiresIn: "1h",
+            expiresIn: "5h",
           }
         );
-        console.log("Token generated:", token);
         return res.json({ message: "Login successful", token });
       } else {
         return res.status(401).json({ error: "Invalid credentials" });

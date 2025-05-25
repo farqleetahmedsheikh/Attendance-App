@@ -58,7 +58,7 @@ CREATE TABLE TeacherSubjectTable (
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
 );
 
-DROP TABLE TeacherSubjectTable;
+-- DROP TABLE TeacherSubjectTable;
  
 
 

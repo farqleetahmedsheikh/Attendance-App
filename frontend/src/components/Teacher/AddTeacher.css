@@ -1,0 +1,66 @@
+/* AddTeacher.css */
+
+.teacher-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+.teacher-form input,
+.teacher-form select {
+    flex: 1 1 45%;
+    padding: 0.75rem;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.teacher-form .full-width {
+    flex: 1 1 100%;
+}
+
+.teacher-form input:focus,
+.teacher-form select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+@media (max-width: 768px) {
+
+    .teacher-form input,
+    .teacher-form select {
+        flex: 1 1 100%;
+    }
+}
+
+.teacher-form select[multiple] {
+    height: 120px;
+    resize: vertical;
+}
+
+.teacher-form button[type="submit"] {
+    flex: 1 1 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.teacher-form button[type="submit"]:hover {
+    background-color: #005fa3;
+}

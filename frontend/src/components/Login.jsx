@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,7 +24,8 @@ const Login = ({ role }) => {
     const data = await response.json();
     if (response.ok) {
       alert(`${role} login successful`);
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("token", data.token); // ✔️ store raw string only
+
       navigate("/dashboard");
     } else {
       alert(data.error || "Login failed");

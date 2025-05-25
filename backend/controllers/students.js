@@ -1,3 +1,5 @@
+/** @format */
+
 const bcrypt = require("bcrypt");
 const db = require("../connection");
 
@@ -58,8 +60,9 @@ const handleAddStudent = (req, res) => {
 
       // Step 2: Hash the password
       bcrypt.hash(Password, 10, (hashErr, hashPassword) => {
-        if (hashErr)
+        if (hashErr) {
           return res.status(500).json({ error: "Password hashing failed" });
+        }
 
         // Step 3: Insert student directly using provided ClassID
         db.query(
@@ -91,8 +94,7 @@ const handleAddStudent = (req, res) => {
                 .status(500)
                 .json({ error: "Adding Student failed", errMsg: insertErr });
             }
-
-            res.status(201).json({
+            return res.status(201).json({
               message: "Student added successfully",
               student: {
                 Std_ID: result.insertId,

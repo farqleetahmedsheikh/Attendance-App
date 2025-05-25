@@ -1,19 +1,18 @@
 /** @format */
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setStudents } from "../../redux/studentSlice";
+import { setSubjects } from "../../redux/teacherSlice";
+import AddSubject from "./AddSubject";
+import ShowSubjects from "./SubjectList";
+import "./Subject.css"; // Use the same style structure as Student.css
 import { setClasses } from "../../redux/classSlice";
-import StudentForm from "./AddStudent";
-import StudentList from "./StudentList";
-import "./Student.css";
 
-const ManageStudent = () => {
+const ManageSubject = () => {
   const dispatch = useDispatch();
   const [activeSection, setActiveSection] = useState("show");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     const fetchClasses = async () => {
       try {
         const res = await fetch("http://localhost:4000/api/class/get-classes", {
@@ -25,63 +24,60 @@ const ManageStudent = () => {
         if (!res.ok) throw new Error("Failed to fetch classes");
 
         const data = await res.json();
-        dispatch(setClasses(data)); // Store classes in Redux
+        dispatch(setClasses(data)); // Store subjects in Redux
       } catch (error) {
         console.error("Error fetching classes:", error);
       }
     };
-
-    const fetchStudents = async () => {
+    const fetchSubjects = async () => {
       try {
         const res = await fetch(
-          "http://localhost:4000/api/student/get-students",
+          "http://localhost:4000/api/subject/get-subjects",
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
             },
           }
         );
 
-        if (!res.ok) throw new Error("Failed to fetch students");
+        if (!res.ok) throw new Error("Failed to fetch subjects");
 
         const data = await res.json();
-        dispatch(setStudents(data)); // Store students in Redux
+        dispatch(setSubjects(data)); // Store subjects in Redux
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching subjects:", error);
       }
     };
-
     fetchClasses();
-    fetchStudents();
+    fetchSubjects();
   }, [dispatch]);
 
   return (
     <div className="manage-container">
-      <h2>Manage Student</h2>
+      <h2>Manage Subjects</h2>
       <div className="dropdowns">
         <button
           className={activeSection === "add" ? "active" : ""}
           onClick={() => setActiveSection("add")}
         >
-          Add Student
+          Add Subject
         </button>
         <button
           className={activeSection === "show" ? "active" : ""}
           onClick={() => setActiveSection("show")}
         >
-          Show All Students
+          Show All Subjects
         </button>
       </div>
 
       <div className="section-content">
         {activeSection === "add" ? (
-          <div className="add-student">
-            <StudentForm />
+          <div className="add-subject">
+            <AddSubject />
           </div>
         ) : (
-          <div className="show-student">
-            <StudentList />
+          <div className="show-subjects">
+            <ShowSubjects />
           </div>
         )}
       </div>
@@ -89,4 +85,4 @@ const ManageStudent = () => {
   );
 };
 
-export default ManageStudent;
+export default ManageSubject;

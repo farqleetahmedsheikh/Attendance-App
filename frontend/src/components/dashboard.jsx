@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import "./dashboard.css";
 
 const AdminDashboard = () => {
-  const [openDropdown, setOpenDropdown] = useState("student"); // default open
+  const [openDropdown, setOpenDropdown] = useState(""); // default open
 
   const toggleDropdown = (section) => {
     setOpenDropdown((prev) => (prev === section ? "" : section));

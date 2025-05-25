@@ -1,0 +1,46 @@
+.teacher-list {
+    max-width: 850px;
+    margin: 0 auto;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+}
+
+.teacher-list h3 {
+    margin-bottom: 1.2rem;
+    text-align: center;
+    color: #007bff;
+}
+
+.teacher-list table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.teacher-list th,
+.teacher-list td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.teacher-list thead {
+    background-color: #007bff;
+    color: white;
+}
+
+.teacher-list tbody tr:hover {
+    background-color: #f1faff;
+}
+
+.teacher-list tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.teacher-list p {
+    text-align: center;
+    color: #777;
+    font-size: 1.1rem;
+}
