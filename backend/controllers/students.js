@@ -24,6 +24,8 @@ const handleAddStudent = (req, res) => {
     GuardianName,
   } = req.body;
 
+  console.log("Received student data:", req.body);
+
   // Validation
   if (
     !Std_Name ||

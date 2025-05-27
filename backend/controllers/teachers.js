@@ -156,10 +156,28 @@ const handleTeacherLogin = (req, res) => {
 // ✅ Show all Teachers
 const handleGetAllTeachers = (req, res) => {
   db.query("SELECT * FROM TeacherTable", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Failed to fetch Teacher" });
-    }
-    res.status(200).json(results);
+    db.query("SELECT * FROM TeacherSubjectTable", (err, subjectResults) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to fetch subjects" });
+      }
+
+      // Map subject IDs to names
+      const subjectMap = {};
+      subjectResults.forEach((subj) => {
+        if (!subjectMap[subj.TeacherID]) {
+          subjectMap[subj.TeacherID] = [];
+        }
+        subjectMap[subj.TeacherID].push(subj.SubjectID);
+      });
+
+      // Attach subjects to each teacher
+      const teachersWithSubjects = results.map((teacher) => ({
+        ...teacher,
+        SubjectIDs: subjectMap[teacher.TeacherID] || [],
+      }));
+
+      res.status(200).json(teachersWithSubjects);
+    });
   });
 };
 

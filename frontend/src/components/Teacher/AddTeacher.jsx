@@ -52,7 +52,7 @@ const TeacherForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/teacher/add-teacher", {
+      const res = await fetch("http://localhost:4000/api/teacher/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

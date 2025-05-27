@@ -25,7 +25,6 @@ export const addStudent = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("Student added successfully:", data);
       return data; // this is returned to the reducer
     } catch (err) {
       return rejectWithValue(err.message);

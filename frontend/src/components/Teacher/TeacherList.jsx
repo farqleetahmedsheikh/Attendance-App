@@ -5,15 +5,26 @@ import "./TeacherList.css";
 const TeacherList = () => {
   const teachers = useSelector((state) => state.teachers?.teachers || []);
   const subjects = useSelector((state) => state.teachers?.subjects || []);
+ const classes = useSelector((state) => state.classes);
 
-  const getSubjectNames = (subjectIDs) => {
+  const getClassName = (classId) => {
+    const cls = classes.find((c) => c.ClassID === classId || c._id === classId);
+    return cls ? cls.ClassName : "Unknown Class";
+  };
+
+  const getSubjectDetails = (subjectIDs) => {
     if (!Array.isArray(subjectIDs)) return "";
+
     return subjectIDs
       .map((id) => {
         const subject = subjects.find(
           (subj) => subj.SubjectID === id || subj._id === id
         );
-        return subject ? subject.SubjectName : "";
+
+        if (!subject) return null;
+
+        const className = getClassName(subject.ClassID);
+        return `${subject.SubjectName} (Class ${className})`;
       })
       .filter(Boolean)
       .join(", ");
@@ -40,7 +51,7 @@ const TeacherList = () => {
                 <td>{t.TeacherName}</td>
                 <td>{t.TeacherEmail}</td>
                 <td>{t.TeacherPhoneNo}</td>
-                <td>{getSubjectNames(t.SubjectID)}</td>
+                <td>{getSubjectDetails(t.SubjectIDs)}</td>
               </tr>
             ))}
           </tbody>

@@ -55,7 +55,8 @@ const StudentForm = () => {
       }
 
       const savedStudent = await res.json();
-      dispatch(addStudent(savedStudent)); // ✅ Add to store without refetching
+      console.log(savedStudent);
+      dispatch(addStudent(savedStudent.student)); // ✅ Add to store without refetching
       alert("Student added successfully!");
 
       // Reset the form

@@ -16,19 +16,33 @@ const AdminDashboard = () => {
           <h2>Admin Panel</h2>
         </Link>
         <ul>
-          {/* Student */}
+          {/* Class */}
           <li
             className="dropdown-title"
-            onClick={() => toggleDropdown("student")}
+            onClick={() => toggleDropdown("class")}
           >
-            Student ▾
+            Class ▾
           </li>
           <div
             className={`dropdown-links ${
-              openDropdown === "student" ? "open" : ""
+              openDropdown === "class" ? "open" : ""
             }`}
           >
-            <Link to="/dashboard/student/manage">Manage Student</Link>
+            <Link to="/dashboard/class/manage">Manage Class</Link>
+          </div>
+          {/* Subject */}
+          <li
+            className="dropdown-title"
+            onClick={() => toggleDropdown("subject")}
+          >
+            Subject ▾
+          </li>
+          <div
+            className={`dropdown-links ${
+              openDropdown === "subject" ? "open" : ""
+            }`}
+          >
+            <Link to="/dashboard/subject/manage">Manage Subject</Link>
           </div>
 
           {/* Teacher */}
@@ -46,34 +60,19 @@ const AdminDashboard = () => {
             <Link to="/dashboard/teacher/manage">Manage Teacher</Link>
           </div>
 
-          {/* Subject */}
+          {/* Student */}
           <li
             className="dropdown-title"
-            onClick={() => toggleDropdown("subject")}
+            onClick={() => toggleDropdown("student")}
           >
-            Subject ▾
+            Student ▾
           </li>
           <div
             className={`dropdown-links ${
-              openDropdown === "subject" ? "open" : ""
+              openDropdown === "student" ? "open" : ""
             }`}
           >
-            <Link to="/dashboard/subject/manage">Manage Subject</Link>
-          </div>
-
-          {/* Class */}
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("class")}
-          >
-            Class ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "class" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/class/manage">Manage Class</Link>
+            <Link to="/dashboard/student/manage">Manage Student</Link>
           </div>
         </ul>
       </aside>
