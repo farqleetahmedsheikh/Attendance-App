@@ -6,8 +6,6 @@ const StudentList = () => {
   const students = useSelector((state) => state.students.students);
   const classes = useSelector((state) => state.classes); // ✅ From Redux
 
-  console.log("Students:", students);
-
   // Convert ClassID to readable name
   const getClassName = (id) => {
     const cls = classes.find((c) => c.ClassID === id || c._id === id);

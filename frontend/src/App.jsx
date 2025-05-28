@@ -8,6 +8,7 @@ import AdminDashboard from "./components/dashboard";
 import Student from "./components/Student/Student";
 import Teacher from "./components/Teacher/Teacher";
 import Subject from "./components/Subject/Subject";
+import Class from "./components/Class/Class";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <Route path="student/manage" element={<Student />} />
           <Route path="teacher/manage" element={<Teacher />} />
 
-          {/*        <Route path="class/manage" element={<ClassManage />} /> */}
+          <Route path="class/manage" element={<Class />} />
 
           <Route path="subject/manage" element={<Subject />} />
         </Route>

@@ -11,6 +11,8 @@ const ShowSubjects = () => {
     return cls ? cls.ClassName : "Unknown";
   };
 
+  console.log(subjects);
+
   return (
     <div className="subject-list">
       <h3>Subjects List</h3>

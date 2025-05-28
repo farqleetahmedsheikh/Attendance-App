@@ -31,6 +31,9 @@ const addSubject = (req, res) => {
           res.status(201).json({
             message: "Subject added successfully",
             subjectId: result.insertId,
+            SubjectCode,
+            SubjectName,
+            ClassID,
           });
         }
       );

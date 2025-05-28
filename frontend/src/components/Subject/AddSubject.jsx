@@ -34,14 +34,19 @@ const AddSubject = () => {
         },
         body: JSON.stringify(formData),
       });
-      console.log("Response:", res);    
 
       if (!res.ok) throw new Error("Failed to add subject");
 
       const newSubject = await res.json();
 
-      // ✅ Add to Redux store
-      dispatch(addSubject(newSubject));
+      const subjectToStore = {
+        subjectId: newSubject.subjectId,
+        SubjectCode: newSubject.SubjectCode,
+        SubjectName: newSubject.SubjectName,
+        ClassID: newSubject.ClassID,
+      };
+      dispatch(addSubject(subjectToStore));
+      
 
       alert("Subject added successfully!");
 

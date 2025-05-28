@@ -105,6 +105,7 @@ const handleAddStudent = (req, res) => {
                 RollNo,
                 Status,
                 ClassID,
+                Gender,
               },
             });
           }

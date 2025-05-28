@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addStudent } from "../../redux/studentSlice";
+import { setStudents } from "../../redux/studentSlice";
 import "./AddStudent.css";
 
 const StudentForm = () => {
   const dispatch = useDispatch();
   const classes = useSelector((state) => state.classes); // ✅ from Redux store
+  const students = useSelector((state) => state.students.students);
 
   const [formData, setFormData] = useState({
     Std_Name: "",
@@ -55,8 +56,9 @@ const StudentForm = () => {
       }
 
       const savedStudent = await res.json();
-      console.log(savedStudent);
-      dispatch(addStudent(savedStudent.student)); // ✅ Add to store without refetching
+      const savedStudentData = savedStudent.student;
+      console.log(savedStudentData);
+      dispatch(setStudents([...students, savedStudentData])); // ✅ Add to store without refetching
       alert("Student added successfully!");
 
       // Reset the form

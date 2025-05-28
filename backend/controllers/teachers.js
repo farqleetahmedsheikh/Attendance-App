@@ -106,6 +106,7 @@ const handleAddTeacher = (req, res) => {
                   TeacherName,
                   TeacherEmail,
                   SubjectIDs: SubjectID,
+                  TeacherPhoneNo,
                 },
               });
             }

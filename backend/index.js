@@ -10,7 +10,7 @@ const teacherRoute = require("./routes/teacher"); // Import the class route
 const connection = require("./connection"); // Import the connection module
 const verifyAdmin = require("./middleware/auth"); // Import the auth middleware
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 connection; // Call the connection function to establish a connection to the database
 
 app.use(

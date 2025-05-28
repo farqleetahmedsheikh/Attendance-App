@@ -5,13 +5,12 @@ import "./TeacherList.css";
 const TeacherList = () => {
   const teachers = useSelector((state) => state.teachers?.teachers || []);
   const subjects = useSelector((state) => state.teachers?.subjects || []);
- const classes = useSelector((state) => state.classes);
+  const classes = useSelector((state) => state.classes);
 
   const getClassName = (classId) => {
     const cls = classes.find((c) => c.ClassID === classId || c._id === classId);
     return cls ? cls.ClassName : "Unknown Class";
   };
-
   const getSubjectDetails = (subjectIDs) => {
     if (!Array.isArray(subjectIDs)) return "";
 
