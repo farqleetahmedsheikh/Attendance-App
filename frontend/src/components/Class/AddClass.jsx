@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addClass } from "../../redux/classSlice";
+import { ToastContainer, toast } from "react-toastify";
 import "./AddClass.css"; // Make sure this contains your .class-form CSS
 
 const ClassForm = () => {
@@ -39,25 +40,44 @@ const ClassForm = () => {
       };
 
       dispatch(addClass(newClass));
-      alert("Class added successfully!");
+      toast.success("Class added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
       setFormData({ ClassName: "", Section: "" });
     } catch (error) {
-      console.error("Error adding class:", error);
-      alert("Something went wrong while adding the class.");
+      toast.error("Something went wrong while adding the class.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="class-form">
-      <input
-        name="ClassName"
-        value={formData.ClassName}
-        onChange={handleChange}
-        placeholder="Class Name"
-        required
-      />
-      <button type="submit">Add Class</button>
-    </form>
+    <>
+      {" "}
+      <ToastContainer />
+      <form onSubmit={handleSubmit} className="class-form">
+        <input
+          name="ClassName"
+          value={formData.ClassName}
+          onChange={handleChange}
+          placeholder="Class Name"
+          required
+        />
+        <button type="submit">Add Class</button>
+      </form>
+    </>
   );
 };
 

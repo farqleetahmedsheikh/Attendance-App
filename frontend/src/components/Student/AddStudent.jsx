@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStudents } from "../../redux/studentSlice";
+import { ToastContainer, toast } from "react-toastify";
 import "./AddStudent.css";
 
 const StudentForm = () => {
@@ -57,9 +58,17 @@ const StudentForm = () => {
 
       const savedStudent = await res.json();
       const savedStudentData = savedStudent.student;
-      console.log(savedStudentData);
       dispatch(setStudents([...students, savedStudentData])); // ✅ Add to store without refetching
-      alert("Student added successfully!");
+
+      toast.success("Student added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
 
       // Reset the form
       setFormData({
@@ -82,8 +91,15 @@ const StudentForm = () => {
         GuardianName: "",
       });
     } catch (error) {
-      console.error("Error adding student:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Failed to add student!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
 

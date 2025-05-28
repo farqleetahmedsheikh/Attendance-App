@@ -21,9 +21,9 @@ app.use(
 );
 app.use(express.json());
 
-app.use("/api/student", verifyAdmin, usersRoute); // Use the users route
-
 app.use("/api/admin", adminRoute); // Use the admin route
+
+app.use("/api/student", verifyAdmin, usersRoute); // Use the users route
 
 app.use("/api/class", verifyAdmin, classRoute); // Use the class route
 

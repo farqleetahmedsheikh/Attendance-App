@@ -58,7 +58,7 @@ CREATE TABLE TeacherSubjectTable (
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
 );
 
--- DROP TABLE TeacherSubjectTable;
+Select * from TeacherSubjectTable;
  
 
 
@@ -70,6 +70,7 @@ CREATE TABLE ClassDetailTable (
     FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID),
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID)
 );
+
 
 -- Teacher Detail Table
 CREATE TABLE TeacherDetail (
@@ -103,6 +104,18 @@ CREATE TABLE Std_Table (
     Address TEXT,
     GuardianName VARCHAR(100),
     FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+);
+
+CREATE TABLE ParentTable (
+    ParentID INT PRIMARY KEY AUTO_INCREMENT,
+    ParentName VARCHAR(100),
+    ParentEmail VARCHAR(100),
+    Password VARCHAR(100),
+    ParentPhoneNo VARCHAR(20),
+    ParentCNIC VARCHAR(20),
+    Religion VARCHAR(50),
+    Gender VARCHAR(20),
+    Address TEXT
 );
 
 -- ALTER TABLE Std_Table

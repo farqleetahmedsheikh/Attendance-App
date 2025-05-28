@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./dashboard.css";
 
 const AdminDashboard = () => {
-  const [openDropdown, setOpenDropdown] = useState(""); // default open
+  const [openDropdown, setOpenDropdown] = useState("");
+  const navigate = useNavigate();
 
   const toggleDropdown = (section) => {
     setOpenDropdown((prev) => (prev === section ? "" : section));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove JWT token
+    navigate("/login/admin"); // Redirect to login
   };
 
   return (
@@ -16,7 +22,6 @@ const AdminDashboard = () => {
           <h2>Admin Panel</h2>
         </Link>
         <ul>
-          {/* Class */}
           <li
             className="dropdown-title"
             onClick={() => toggleDropdown("class")}
@@ -30,7 +35,7 @@ const AdminDashboard = () => {
           >
             <Link to="/dashboard/class/manage">Manage Class</Link>
           </div>
-          {/* Subject */}
+
           <li
             className="dropdown-title"
             onClick={() => toggleDropdown("subject")}
@@ -45,7 +50,6 @@ const AdminDashboard = () => {
             <Link to="/dashboard/subject/manage">Manage Subject</Link>
           </div>
 
-          {/* Teacher */}
           <li
             className="dropdown-title"
             onClick={() => toggleDropdown("teacher")}
@@ -60,7 +64,6 @@ const AdminDashboard = () => {
             <Link to="/dashboard/teacher/manage">Manage Teacher</Link>
           </div>
 
-          {/* Student */}
           <li
             className="dropdown-title"
             onClick={() => toggleDropdown("student")}
@@ -75,6 +78,11 @@ const AdminDashboard = () => {
             <Link to="/dashboard/student/manage">Manage Student</Link>
           </div>
         </ul>
+
+        {/* 🔒 Logout Button */}
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
       </aside>
 
       <main className="dashboard-content">

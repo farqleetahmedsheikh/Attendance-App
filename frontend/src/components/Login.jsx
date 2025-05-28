@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = ({ role }) => {
   const navigate = useNavigate();
@@ -23,43 +24,66 @@ const Login = ({ role }) => {
 
     const data = await response.json();
     if (response.ok) {
-      alert(`${role} login successful`);
+      toast.success("login Successfull", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
       localStorage.setItem("token", data.token); // ✔️ store raw string only
 
-      navigate("/dashboard");
+      setTimeout(() => {
+        if (role === "admin") {
+          navigate("/dashboard/class/manage");
+        }
+      }, 3000);
     } else {
-      alert(data.error || "Login failed");
+      toast.error(data.error || "Login failed", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login as {role}</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={Email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+    <>
+      <ToastContainer />
+      <div className="login-container">
+        <h2>Login as {role}</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={Password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={Password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <button type="submit">Login</button>
-        <div style={{ marginTop: "15px" }}>
-          <Link to="/forgot-password">Forget Password</Link>
-          <span style={{ margin: "0 10px" }}>|</span>
-          <Link to="/">Back to Home</Link>
-        </div>
-      </form>
-    </div>
+          <button type="submit">Login</button>
+          <div style={{ marginTop: "15px" }}>
+            {/* <Link to="/forgot-password">Forget Password</Link> */}
+            <span style={{ margin: "0 10px" }}>|</span>
+            <Link to="/">Back to Home</Link>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

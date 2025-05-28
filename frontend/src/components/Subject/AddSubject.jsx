@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addSubject } from "../../redux/subjectSlice";
+import { ToastContainer, toast } from "react-toastify";
 import "./AddSubject.css"; // Assuming you have some styles for the form
 
 const AddSubject = () => {
@@ -46,9 +47,15 @@ const AddSubject = () => {
         ClassID: newSubject.ClassID,
       };
       dispatch(addSubject(subjectToStore));
-      
-
-      alert("Subject added successfully!");
+      toast.success("Subject added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
 
       setFormData({
         SubjectName: "",
@@ -56,44 +63,55 @@ const AddSubject = () => {
         ClassID: "",
       });
     } catch (error) {
-      console.error("Error adding subject:", error);
-      alert("Failed to add subject. Try again.");
+      toast.error("Failed to add subject. Try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="subject-form">
-      <input
-        name="SubjectName"
-        value={formData.SubjectName}
-        onChange={handleChange}
-        placeholder="Subject Name"
-        required
-      />
-      <input
-        name="SubjectCode"
-        value={formData.SubjectCode}
-        onChange={handleChange}
-        placeholder="Subject Code"
-        required
-      />
-      <select
-        name="ClassID"
-        value={formData.ClassID}
-        onChange={handleChange}
-        required
-      >
-        <option value="" disabled>
-          Select Class
-        </option>
-        {classes.map((cls) => (
-          <option key={cls.ClassID} value={cls.ClassID}>
-            {cls.ClassName}
+    <>
+      {" "}
+      <ToastContainer />
+      <form onSubmit={handleSubmit} className="subject-form">
+        <input
+          name="SubjectName"
+          value={formData.SubjectName}
+          onChange={handleChange}
+          placeholder="Subject Name"
+          required
+        />
+        <input
+          name="SubjectCode"
+          value={formData.SubjectCode}
+          onChange={handleChange}
+          placeholder="Subject Code"
+          required
+        />
+        <select
+          name="ClassID"
+          value={formData.ClassID}
+          onChange={handleChange}
+          required
+        >
+          <option value="" disabled>
+            Select Class
           </option>
-        ))}
-      </select>
-      <button type="submit">Add Subject</button>
-    </form>
+          {classes.map((cls) => (
+            <option key={cls.ClassID} value={cls.ClassID}>
+              {cls.ClassName}
+            </option>
+          ))}
+        </select>
+        <button type="submit">Add Subject</button>
+      </form>
+    </>
   );
 };
 
