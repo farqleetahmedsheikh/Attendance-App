@@ -6,6 +6,7 @@ import { setStudents } from "../redux/studentSlice";
 import { setParents } from "../redux/parentSlice";
 import { setTeachers } from "../redux/teacherSlice";
 import { setSubjects } from "../redux/subjectSlice";
+import { setPTMs } from "../redux/ptmSlice";
 import "./dashboard.css";
 
 const AdminDashboard = () => {
@@ -107,6 +108,24 @@ const AdminDashboard = () => {
         console.error("Error fetching parents:", error);
       }
     };
+
+        const fetchPTMs = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/ptm/get-ptm", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch PTMs");
+        const data = await res.json();
+        console.log(data , "PTMs fetched successfully");
+        dispatch(setPTMs(data));
+      } catch (err) {
+        console.error("Error fetching PTMs:", err);
+      }
+    };
+
+    fetchPTMs();
 
     fetchParents();
     fetchSubjects();
