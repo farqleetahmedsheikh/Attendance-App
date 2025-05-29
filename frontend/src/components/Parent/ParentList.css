@@ -1,0 +1,103 @@
+/* ParentList.css */
+
+.parent-list {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.parent-list h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.parent-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.parent-list th,
+.parent-list td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.parent-list th {
+  background-color: #0077cc;
+  color: white;
+  font-weight: 600;
+}
+
+.parent-list tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.parent-list td {
+  color: #555;
+}
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+  .parent-list table {
+    font-size: 0.85rem;
+  }
+
+  .parent-list th,
+  .parent-list td {
+    padding: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .parent-list {
+    padding: 1rem;
+  }
+
+  .parent-list h3 {
+    font-size: 1.4rem;
+  }
+
+  .parent-list table,
+  .parent-list thead,
+  .parent-list tbody,
+  .parent-list th,
+  .parent-list td,
+  .parent-list tr {
+    display: block;
+  }
+
+  .parent-list tr {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .parent-list td {
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .parent-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .parent-list th {
+    display: none;
+  }
+}

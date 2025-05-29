@@ -118,6 +118,17 @@ CREATE TABLE ParentTable (
     Address TEXT
 );
 
+CREATE TABLE PTM_Table (
+    PTMID INT PRIMARY KEY AUTO_INCREMENT,
+    PTMDate DATE NOT NULL,
+    Description TEXT,
+    ParentID INT NOT NULL,
+    TeacherID INT NOT NULL,
+    FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID) ON DELETE CASCADE,
+    FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID) ON DELETE CASCADE
+);
+
+
 -- ALTER TABLE Std_Table
 -- MODIFY COLUMN Status  VARCHAR(50) DEFAULT ("Inactive");
 -- MODIFY COLUMN Registration_Time TIME DEFAULT (CURRENT_TIME);

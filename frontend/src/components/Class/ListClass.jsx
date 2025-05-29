@@ -7,7 +7,6 @@ import "./ListClass.css";
 
 const ClassList = () => {
   const classes = useSelector((state) => state.classes); // ✅ From Redux
-  console.log(classes);
 
   return (
     <div className="class-list">

@@ -1,129 +1,100 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const db = require("../connection");
+require("dotenv").config();
 
-// ✅ Signup Teacher
-const handleAddTeacher = (req, res) => {
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Replace with your actual secret key
+
+// ✅ Add Parent
+const handleAddParent = (req, res) => {
   const {
-    TeacherName,
-    TeacherEmail,
+    ParentName,
+    ParentEmail,
     Password,
-    TeacherDOB,
-    TeacherPhoneNo,
-    TeacherStatus,
-    TeacherType,
-    TeacherCNIC,
+    ParentPhoneNo,
+    ParentCNIC,
     Religion,
     Gender,
     Address,
-    SubjectID, // now an array of numeric IDs: [1, 2, 5]
   } = req.body;
 
   if (
-    !TeacherName ||
-    !TeacherEmail ||
+    !ParentName ||
+    !ParentEmail ||
     !Password ||
-    !TeacherDOB ||
-    !TeacherPhoneNo ||
-    !TeacherStatus ||
-    !TeacherType ||
-    !TeacherCNIC ||
+    !ParentPhoneNo ||
+    !ParentCNIC ||
     !Religion ||
     !Gender ||
-    !Address ||
-    !Array.isArray(SubjectID) ||
-    SubjectID.length === 0
+    !Address
   ) {
-    return res
-      .status(400)
-      .json({ error: "All fields including Subject IDs are required" });
+    console.log("Validation failed: Missing required fields");
+    return res.status(400).json({ error: "All fields are required" });
   }
 
-  // Check for duplicates
   db.query(
-    "SELECT * FROM TeacherTable WHERE TeacherEmail = ? OR TeacherCNIC = ?",
-    [TeacherEmail, TeacherCNIC],
+    "SELECT * FROM ParentTable WHERE ParentEmail = ? OR ParentCNIC = ?",
+    [ParentEmail, ParentCNIC],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Database error" });
 
       if (results.length > 0) {
-        return res.status(400).json({
-          error: "Teacher already registered with this email or CNIC",
-        });
+        return res
+          .status(400)
+          .json({ error: "Parent already registered with this email or CNIC" });
       }
 
-      // Hash the password
-      bcrypt.hash(Password, 10, (hashErr, hashedPassword) => {
+      bcrypt.hash(Password, 10, (hashErr, Password) => {
         if (hashErr)
           return res.status(500).json({ error: "Password hashing failed" });
 
-        const insertTeacherQuery = `
-          INSERT INTO TeacherTable (
-            TeacherName, TeacherEmail, Password, TeacherDOB,
-            TeacherPhoneNo, TeacherStatus, TeacherType, TeacherCNIC, Religion, Gender, Address
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        const insertQuery = `
+          INSERT INTO ParentTable (
+            ParentName, ParentEmail, Password, ParentPhoneNo,
+            ParentCNIC,Religion , Gender, Address
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        const teacherValues = [
-          TeacherName,
-          TeacherEmail,
-          hashedPassword,
-          TeacherDOB,
-          TeacherPhoneNo,
-          TeacherStatus,
-          TeacherType,
-          TeacherCNIC,
-          Religion,
-          Gender,
-          Address,
-        ];
-
-        db.query(insertTeacherQuery, teacherValues, (insertErr, result) => {
-          if (insertErr)
-            return res
-              .status(500)
-              .json({ error: "Adding Teacher failed", errMsg: insertErr });
-
-          const TeacherID = result.insertId;
-
-          // Build values for TeacherSubjectTable
-          const subjectAssignments = SubjectID.map((id) => [TeacherID, id]);
-
-          db.query(
-            "INSERT INTO TeacherSubjectTable (TeacherID, SubjectID) VALUES ?",
-            [subjectAssignments],
-            (linkErr) => {
-              if (linkErr) {
-                return res.status(500).json({
-                  error: "Failed to link subjects to teacher",
-                  errMsg: linkErr,
-                });
-              }
-
-              res.status(201).json({
-                message: "Teacher added successfully",
-                teacher: {
-                  TeacherID,
-                  TeacherName,
-                  TeacherEmail,
-                  SubjectIDs: SubjectID,
-                  TeacherPhoneNo,
-                },
-              });
+        db.query(
+          insertQuery,
+          [
+            ParentName,
+            ParentEmail,
+            Password,
+            ParentPhoneNo,
+            ParentCNIC,
+            Religion,
+            Gender,
+            Address,
+          ],
+          (insertErr, result) => {
+            if (insertErr) {
+              return res
+                .status(500)
+                .json({ error: "Failed to add parent", errMsg: insertErr });
             }
-          );
-        });
+            res.status(201).json({
+              message: "Parent added successfully",
+              ParentId: result.insertId,
+              ParentName,
+              ParentEmail,
+              ParentPhoneNo,
+              Address,
+            });
+          }
+        );
       });
     }
   );
 };
 
-// ✅ Login Teacher
-const handleTeacherLogin = (req, res) => {
-  const { Std_Email, Password } = req.body;
+// ✅ Login Parent
+const handleParentLogin = (req, res) => {
+  const { ParentEmail, Password } = req.body;
 
   db.query(
-    "SELECT * FROM Std_Table WHERE Std_Email = ?",
-    [Std_Email],
+    "SELECT * FROM ParentTable WHERE ParentEmail = ?",
+    [ParentEmail],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Database error" });
 
@@ -131,81 +102,69 @@ const handleTeacherLogin = (req, res) => {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      const teacher = results[0];
+      const parent = results[0];
 
-      bcrypt.compare(Password, teacher.Password, (bcryptErr, match) => {
+      bcrypt.compare(Password, parent.Password, (bcryptErr, match) => {
         if (bcryptErr)
           return res.status(500).json({ error: "Password comparison failed" });
 
         if (!match)
           return res.status(401).json({ error: "Invalid credentials" });
+
         const token = jwt.sign(
-          { userId: admin.AdminID, role: "admin" },
+          { userId: parent.ParentID, role: "parent" },
           SECRET_KEY,
-          {
-            expiresIn: "1h",
-          }
+          { expiresIn: "1h" }
         );
-        return res
-          .status(200)
-          .json({ message: "Login successful", teacher, token });
+
+        res.status(200).json({
+          message: "Login successful",
+          parent: {
+            ParentID: parent.ParentID,
+            ParentName: parent.ParentName,
+            ParentEmail: parent.ParentEmail,
+          },
+          token,
+        });
       });
     }
   );
 };
 
-// ✅ Show all Teachers
-const handleGetAllTeachers = (req, res) => {
-  db.query("SELECT * FROM TeacherTable", (err, results) => {
-    db.query("SELECT * FROM TeacherSubjectTable", (err, subjectResults) => {
-      if (err) {
-        return res.status(500).json({ error: "Failed to fetch subjects" });
-      }
-
-      // Map subject IDs to names
-      const subjectMap = {};
-      subjectResults.forEach((subj) => {
-        if (!subjectMap[subj.TeacherID]) {
-          subjectMap[subj.TeacherID] = [];
-        }
-        subjectMap[subj.TeacherID].push(subj.SubjectID);
-      });
-
-      // Attach subjects to each teacher
-      const teachersWithSubjects = results.map((teacher) => ({
-        ...teacher,
-        SubjectIDs: subjectMap[teacher.TeacherID] || [],
-      }));
-
-      res.status(200).json(teachersWithSubjects);
-    });
+// ✅ Get All Parents
+const handleGetAllParents = (req, res) => {
+  db.query("SELECT * FROM ParentTable", (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to fetch parents" });
+    }
+    return res.status(200).json(results);
   });
 };
 
-// ❌ Delete teacher by ID
-const handleDeleteTeacher = (req, res) => {
+// ✅ Delete Parent
+const handleDeleteParent = (req, res) => {
   const { id } = req.params;
 
   db.query(
-    "DELETE FROM TeacherTable WHERE TeacherID = ?",
+    "DELETE FROM ParentTable WHERE ParentID = ?",
     [id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ error: "Failed to delete teacher" });
+        return res.status(500).json({ error: "Failed to delete parent" });
       }
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Teacher not found" });
+        return res.status(404).json({ error: "Parent not found" });
       }
 
-      res.status(200).json({ message: "Teacher deleted successfully" });
+      return res.status(200).json({ message: "Parent deleted successfully" });
     }
   );
 };
 
 module.exports = {
-  handleTeacherLogin,
-  handleAddTeacher,
-  handleDeleteTeacher,
-  handleGetAllTeachers,
+  handleAddParent,
+  handleParentLogin,
+  handleGetAllParents,
+  handleDeleteParent,
 };

@@ -41,7 +41,7 @@ const AddSubject = () => {
       const newSubject = await res.json();
 
       const subjectToStore = {
-        subjectId: newSubject.subjectId,
+        SubjectID: newSubject.subjectId,
         SubjectCode: newSubject.SubjectCode,
         SubjectName: newSubject.SubjectName,
         ClassID: newSubject.ClassID,

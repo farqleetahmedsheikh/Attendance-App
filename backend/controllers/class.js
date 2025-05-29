@@ -27,7 +27,8 @@ const handleAddClass = (req, res) => {
 
           res.status(201).json({
             message: "Class Added successfully",
-            classID: result.insertId,
+            ClassID: result.insertId,
+            ClassName: ClassName,
           });
         }
       );

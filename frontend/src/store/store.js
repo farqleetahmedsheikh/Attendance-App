@@ -5,6 +5,8 @@ import studentReducer from "../redux/studentSlice";
 import teacherReducer from "../redux/teacherSlice";
 import subjectReducer from "../redux/subjectSlice";
 import classReducer from "../redux/classSlice";
+import parentReducer from "../redux/parentSlice";
+import ptmSlice from "../redux/ptmSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +14,8 @@ const store = configureStore({
     teachers: teacherReducer,
     subjects: subjectReducer,
     classes: classReducer,
+    parents: parentReducer,
+    ptms: ptmSlice,
   },
 });
 

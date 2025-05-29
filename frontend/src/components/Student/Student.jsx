@@ -1,60 +1,12 @@
 /** @format */
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setStudents } from "../../redux/studentSlice";
-import { setClasses } from "../../redux/classSlice";
+import { useState } from "react";
+
 import StudentForm from "./AddStudent";
 import StudentList from "./StudentList";
 import "./Student.css";
 
 const ManageStudent = () => {
-  const dispatch = useDispatch();
   const [activeSection, setActiveSection] = useState("show");
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    const fetchClasses = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/class/get-classes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch classes");
-
-        const data = await res.json();
-        dispatch(setClasses(data)); // Store classes in Redux
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-      }
-    };
-
-    const fetchStudents = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:4000/api/student/get-students",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch students");
-
-        const data = await res.json();
-        dispatch(setStudents(data)); // Store students in Redux
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-
-    fetchClasses();
-    fetchStudents();
-  }, [dispatch]);
 
   return (
     <div className="manage-container">

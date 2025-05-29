@@ -3,15 +3,13 @@ import { useSelector } from "react-redux";
 import "./SubjectList.css";
 
 const ShowSubjects = () => {
-  const subjects = useSelector((state) => state.teachers?.subjects || []);
+  const subjects = useSelector((state) => state.subjects || []);
   const classes = useSelector((state) => state?.classes || []);
   // Convert ClassID to readable name
   const getClassName = (id) => {
     const cls = classes.find((c) => c.ClassID === id || c._id === id);
     return cls ? cls.ClassName : "Unknown";
   };
-
-  console.log(subjects);
 
   return (
     <div className="subject-list">

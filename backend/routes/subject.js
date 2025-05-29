@@ -12,6 +12,6 @@ router.post("/add", addSubject);
 
 router.get("/get-subjects", getAllSubjects);
 
-router.delete("/:name", deleteSubject);
+router.delete("/:id", deleteSubject);
 
 module.exports = router;

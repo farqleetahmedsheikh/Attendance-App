@@ -13,18 +13,14 @@ const handleAddStudent = (req, res) => {
     Batch,
     Session,
     RollNo,
-    GuardianContact,
     Password,
-    Type,
     Status,
     ClassID,
     Religion,
+    ParentID,
     Gender,
     Address,
-    GuardianName,
   } = req.body;
-
-  console.log("Received student data:", req.body);
 
   // Validation
   if (
@@ -36,13 +32,11 @@ const handleAddStudent = (req, res) => {
     !Batch ||
     !Session ||
     !RollNo ||
-    !GuardianContact ||
-    !Type ||
     !ClassID ||
     !Religion ||
+    !ParentID ||
     !Gender ||
-    !Address ||
-    !GuardianName
+    !Address
   ) {
     return res.status(400).json({ error: "All fields are required" });
   }
@@ -70,8 +64,8 @@ const handleAddStudent = (req, res) => {
         db.query(
           `INSERT INTO Std_Table (
             Std_Name, Std_Email, Std_B_Form, Std_DOB, Batch, Session, RollNo,
-            GuardianContact, Password, Type, Status, ClassID, Religion, Gender, Address, GuardianName
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             Password,  Status, ClassID, Religion,ParentID, Gender, Address
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             Std_Name,
             Std_Email,
@@ -80,15 +74,13 @@ const handleAddStudent = (req, res) => {
             Batch,
             Session,
             RollNo,
-            GuardianContact,
             hashPassword,
-            Type,
             Status,
-            ClassID,
+            Number(ClassID),
             Religion,
+            ParentID,
             Gender,
             Address,
-            GuardianName,
           ],
           (insertErr, result) => {
             if (insertErr) {
@@ -104,8 +96,9 @@ const handleAddStudent = (req, res) => {
                 Std_Email,
                 RollNo,
                 Status,
-                ClassID,
+                ClassID: Number(ClassID),
                 Gender,
+                ParentID,
               },
             });
           }

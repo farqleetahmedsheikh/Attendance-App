@@ -4,7 +4,7 @@ import "./TeacherList.css";
 
 const TeacherList = () => {
   const teachers = useSelector((state) => state.teachers?.teachers || []);
-  const subjects = useSelector((state) => state.teachers?.subjects || []);
+  const subjects = useSelector((state) => state.subjects || []);
   const classes = useSelector((state) => state.classes);
 
   const getClassName = (classId) => {

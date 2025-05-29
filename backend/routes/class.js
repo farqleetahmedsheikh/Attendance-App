@@ -12,6 +12,6 @@ router.post("/add", handleAddClass);
 
 router.get("/get-classes", handleGetAllClasses);
 
-router.delete("/:ClassName", handleDeleteClass);
+router.delete("/:id", handleDeleteClass);
 
 module.exports = router;

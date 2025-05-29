@@ -7,8 +7,18 @@ import "./AddTeacher.css";
 
 const TeacherForm = () => {
   const dispatch = useDispatch();
-  const subjects = useSelector((state) => state.teachers?.subjects || []);
+  const subjects = useSelector((state) => state.subjects || []);
   const classes = useSelector((state) => state?.classes || []);
+
+  const genders = [
+    { ID: "1", Name: "Male" },
+    { ID: "2", Name: "Female" },
+    { ID: "3", Name: "Not to say" },
+  ];
+  const types = [
+    { ID: "1", Name: "Regular" },
+    { ID: "2", Name: "Visitor" },
+  ];
   // Convert ClassID to readable name
   const getClassName = (id) => {
     const cls = classes.find((c) => c.ClassID === id || c._id === id);
@@ -145,27 +155,28 @@ const TeacherForm = () => {
           value={formData.TeacherPhoneNo}
           onChange={handleChange}
           placeholder="Phone Number"
+          type="number"
           required
         />
-        <input
-          name="TeacherStatus"
-          value={formData.TeacherStatus}
-          onChange={handleChange}
-          placeholder="Status"
-          required
-        />
-        <input
+        <select
           name="TeacherType"
           value={formData.TeacherType}
           onChange={handleChange}
-          placeholder="Type"
           required
-        />
+        >
+          <option value="">Select Type</option>
+          {types.map((type) => (
+            <option key={type.ID} value={type.Name}>
+              {type.Name}
+            </option>
+          ))}
+        </select>
         <input
           name="TeacherCNIC"
           value={formData.TeacherCNIC}
           onChange={handleChange}
           placeholder="CNIC"
+          type="number"
           required
         />
         <input
@@ -175,13 +186,19 @@ const TeacherForm = () => {
           placeholder="Religion"
           required
         />
-        <input
+        <select
           name="Gender"
           value={formData.Gender}
           onChange={handleChange}
-          placeholder="Gender"
           required
-        />
+        >
+          <option value="">Select Gender</option>
+          {genders.map((gender) => (
+            <option key={gender.ID} value={gender.Name}>
+              {gender.Name}
+            </option>
+          ))}
+        </select>
         <input
           className="full-width"
           name="Address"

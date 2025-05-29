@@ -4,7 +4,6 @@ const db = require("../connection");
 
 const addSubject = (req, res) => {
   const { SubjectName, SubjectCode, ClassID } = req.body;
-  console.log(req.body);
 
   // Step 1: Find ClassID from ClassName
   db.query(
@@ -20,7 +19,7 @@ const addSubject = (req, res) => {
       }
       db.query(
         "INSERT INTO SubjectTable (SubjectName, SubjectCode, ClassID) VALUES (?, ?, ?)",
-        [SubjectName, SubjectCode, ClassID],
+        [SubjectName, SubjectCode, Number(ClassID)],
         (insertErr, result) => {
           if (insertErr) {
             return res
@@ -33,7 +32,7 @@ const addSubject = (req, res) => {
             subjectId: result.insertId,
             SubjectCode,
             SubjectName,
-            ClassID,
+            ClassID: Number(ClassID),
           });
         }
       );

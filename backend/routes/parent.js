@@ -1,17 +1,20 @@
 const express = require("express");
 
 const {
-  addSubject,
-  getAllSubjects,
-  deleteSubject,
-} = require("../controllers/subject");
+  handleAddParent,
+  handleDeleteParent,
+  handleGetAllParents,
+  handleParentLogin,
+} = require("../controllers/parent");
 
 const router = express.Router();
 
-router.post("/add", addSubject);
+router.post("/add", handleAddParent);
 
-router.get("/get-subjects", getAllSubjects);
+router.post("/login", handleParentLogin);
 
-router.delete("/:name", deleteSubject);
+router.get("/get-parents", handleGetAllParents);
+
+router.delete("/:id", handleDeleteParent);
 
 module.exports = router;

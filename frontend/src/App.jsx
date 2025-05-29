@@ -9,6 +9,8 @@ import Student from "./components/Student/Student";
 import Teacher from "./components/Teacher/Teacher";
 import Subject from "./components/Subject/Subject";
 import Class from "./components/Class/Class";
+import Parent from "./components/Parent/Parent";
+import PTM from "./components/PtmEventPlanner/PtmPlanner";
 
 function App() {
   return (
@@ -22,10 +24,10 @@ function App() {
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route path="student/manage" element={<Student />} />
           <Route path="teacher/manage" element={<Teacher />} />
-
           <Route path="class/manage" element={<Class />} />
-
           <Route path="subject/manage" element={<Subject />} />
+          <Route path="parent/manage" element={<Parent />} />
+          <Route path="ptm/manage" element={<PTM />} />
         </Route>
       </Routes>
     </Router>

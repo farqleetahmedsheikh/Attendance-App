@@ -9,7 +9,6 @@ const handleAddTeacher = (req, res) => {
     Password,
     TeacherDOB,
     TeacherPhoneNo,
-    TeacherStatus,
     TeacherType,
     TeacherCNIC,
     Religion,
@@ -24,7 +23,6 @@ const handleAddTeacher = (req, res) => {
     !Password ||
     !TeacherDOB ||
     !TeacherPhoneNo ||
-    !TeacherStatus ||
     !TeacherType ||
     !TeacherCNIC ||
     !Religion ||
@@ -59,8 +57,8 @@ const handleAddTeacher = (req, res) => {
         const insertTeacherQuery = `
           INSERT INTO TeacherTable (
             TeacherName, TeacherEmail, Password, TeacherDOB,
-            TeacherPhoneNo, TeacherStatus, TeacherType, TeacherCNIC, Religion, Gender, Address
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            TeacherPhoneNo, TeacherType, TeacherCNIC, Religion, Gender, Address
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const teacherValues = [
@@ -69,7 +67,6 @@ const handleAddTeacher = (req, res) => {
           hashedPassword,
           TeacherDOB,
           TeacherPhoneNo,
-          TeacherStatus,
           TeacherType,
           TeacherCNIC,
           Religion,
@@ -140,7 +137,7 @@ const handleTeacherLogin = (req, res) => {
         if (!match)
           return res.status(401).json({ error: "Invalid credentials" });
         const token = jwt.sign(
-          { userId: admin.AdminID, role: "admin" },
+          { userId: admin.AdminID, role: "teacher" },
           SECRET_KEY,
           {
             expiresIn: "1h",

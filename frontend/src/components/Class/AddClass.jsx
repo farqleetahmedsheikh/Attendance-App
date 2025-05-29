@@ -31,12 +31,12 @@ const ClassForm = () => {
 
       if (!res.ok) throw new Error("Failed to add class");
       const data = await res.json();
+      console.log("Class added:", data);
 
       // Normalize the ID field (adjust based on your backend response)
       const newClass = {
         ClassName: data.ClassName,
-        Section: data.Section,
-        id: data.classId || data._id || data.ID,
+        ClassID: data.ClassID || data._id || data.ID,
       };
 
       dispatch(addClass(newClass));
