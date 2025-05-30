@@ -136,3 +136,38 @@ CREATE TABLE PTM_Table (
 -- select * from SubjectTable;
 -- select * from ClassTable; 
 -- select * from Std_Table; 
+
+
+-- Subject Table
+ALTER TABLE SubjectTable
+DROP FOREIGN KEY fk_subject_class; -- Assuming this is the name of the FK constraint
+
+select * from SubjectTable;
+
+ALTER TABLE SubjectTable
+ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+ON DELETE CASCADE;
+
+-- Std_Table (Student Table)
+ALTER TABLE Std_Table
+DROP FOREIGN KEY std_table_ibfk_1; -- Assuming this is the name of the FK constraint
+
+ALTER TABLE Std_Table
+ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+ON DELETE SET NULL;
+
+-- ClassDetailTable
+ALTER TABLE ClassDetailTable
+DROP FOREIGN KEY classdetailtable_ibfk_3; -- Assuming this is the name of the FK constraint
+
+ALTER TABLE ClassDetailTable
+ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+ON DELETE CASCADE;
+
+-- TeacherSubjectTable
+ALTER TABLE TeacherSubjectTable
+DROP FOREIGN KEY teachersubjecttable_ibfk_2; -- Assuming this is the name of the FK constraint
+
+ALTER TABLE TeacherSubjectTable
+ADD FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
+ON DELETE CASCADE;
