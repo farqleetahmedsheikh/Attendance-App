@@ -5,6 +5,7 @@ const {
   handleDeleteParent,
   handleGetAllParents,
   handleParentLogin,
+  handleUpdateParent,
 } = require("../controllers/parent");
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.post("/login", handleParentLogin);
 
 router.get("/get-parents", handleGetAllParents);
 
-router.delete("/:id", handleDeleteParent);
+router.put("/update/:id", handleUpdateParent);
+
+router.delete("/delete/:id", handleDeleteParent);
 
 module.exports = router;

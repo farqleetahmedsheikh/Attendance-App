@@ -27,11 +27,11 @@ const ManagePTM = () => {
       </div>
       <div className="section-content">
         {activeSection === "add" ? (
-          <div className="add-student">
+          <div className="add-ptm">
             <AddPTM />
           </div>
         ) : (
-          <div className="show-student">
+          <div className="show-ptm">
             <PTMList />
           </div>
         )}

@@ -5,6 +5,7 @@ const {
   handleAddStudent,
   handleDeleteStudent,
   handleGetAllStudents,
+  handleUpdateStudent,
 } = require("../controllers/students");
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.post("/login", handleStudentLogin);
 
 router.get("/get-students", handleGetAllStudents);
 
-router.delete("/:id", handleDeleteStudent);
+router.put("/update/:id", handleUpdateStudent);
+
+router.delete("/delete/:id", handleDeleteStudent);
 
 module.exports = router;

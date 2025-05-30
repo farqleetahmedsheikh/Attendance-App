@@ -36,6 +36,57 @@ const handleAddPTM = (req, res) => {
   );
 };
 
+const handleUpdatePTM = (req, res) => {
+  const { id } = req.params;
+  const { PTMDate, PTMTime, Description } = req.body; // First, get the existing data
+
+  db.query("SELECT * FROM PTM_Table WHERE PTMID = ?", [id], (err, results) => {
+    if (err) {
+      console.log("Database error:", err);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "PTM not found" });
+    }
+
+    const existingPTM = results[0]; // Fallback to existing values if fields are empty
+
+    const updatedPTMDate =
+      PTMDate && PTMDate.trim() !== "" ? PTMDate : existingPTM.PTMDate;
+    const updatedPTMTime =
+      PTMTime && PTMTime.trim() !== "" ? PTMTime : existingPTM.PTMTime;
+    const updatedDescription =
+      Description && Description.trim() !== ""
+        ? Description
+        : existingPTM.Description; // Update query
+
+    const updateQuery = `
+  UPDATE PTM_Table
+  SET PTMDate = ?, PTMTime = ?, Description = ?
+  WHERE PTMID = ?
+`;
+
+    const updateValues = [
+      updatedPTMDate,
+      updatedPTMTime,
+      updatedDescription,
+      id,
+    ];
+
+    db.query(updateQuery, updateValues, (updateErr, updateResult) => {
+      if (updateErr) {
+        console.error("Update error:", updateErr);
+        return res
+          .status(500)
+          .json({ error: "Failed to update PTM", updateErr });
+      }
+
+      res.status(200).json({ message: "PTM updated successfully" });
+    });
+  });
+};
+
 // Get all PTMs with parent and teacher names
 const handleGetAllPTMs = (req, res) => {
   const query = `
@@ -71,4 +122,5 @@ module.exports = {
   handleAddPTM,
   handleGetAllPTMs,
   handleDeletePTM,
+  handleUpdatePTM,
 };

@@ -52,8 +52,11 @@ const handleGetAllClasses = (req, res) => {
 // Delete class by class id
 const handleDeleteClass = (req, res) => {
   const { id } = req.params;
-
+  if (!id) {
+    return res.status(400).json({ error: "Class ID is required" });
+  }
   db.query("DELETE FROM ClassTable WHERE ClassID = ?", [id], (err, result) => {
+    console.log("Delete result:", result);
     if (err) {
       return res.status(500).json({ error: "Failed to delete class" });
     }
@@ -61,7 +64,7 @@ const handleDeleteClass = (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "class not found" });
     }
-
+ 
     res.status(200).json({ message: "class deleted successfully" });
   });
 };

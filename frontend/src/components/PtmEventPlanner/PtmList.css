@@ -1,0 +1,139 @@
+/* Ptm.css */
+
+.ptm-list {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.ptm-list h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.ptm-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ptm-list th,
+.ptm-list td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.ptm-list th {
+  background-color: #0077cc;
+  color: white;
+  font-weight: 600;
+}
+
+.ptm-list tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.ptm-list td {
+  color: #555;
+}
+.ptm-modal {
+  background: #fff;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%; /* Make sure it respects max-width on larger screens */
+  margin: 100px auto; /* Keep the top margin for spacing */
+  border-radius: 12px;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: calc(
+    100vh - 150px
+  ); /* Optional: Limit max height to viewport, adjust 150px as needed for top margin and some extra space */
+}
+
+.ptm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the modal */
+  overflow: auto; /* In case the modal is very tall */
+}
+
+.ptm-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-actions .save-btn {
+  background: #2ecc71;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer; /* Added cursor for better UX */
+}
+
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: white;
+}
+
+.edit-btn {
+  background-color: #3498db;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+.save-btn {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.save-btn:hover {
+  background-color: #005fa3;
+}
+button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+}

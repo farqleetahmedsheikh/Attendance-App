@@ -5,6 +5,7 @@ const {
   handleAddTeacher,
   handleGetAllTeachers,
   handleDeleteTeacher,
+  handleUpdateTeacher,
 } = require("../controllers/teachers");
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.post("/login", handleTeacherLogin);
 
 router.get("/get-teachers", handleGetAllTeachers);
 
-router.delete("/:id", handleDeleteTeacher);
+router.put("/update/:id", handleUpdateTeacher);
+
+router.delete("/delete/:id", handleDeleteTeacher);
 
 module.exports = router;

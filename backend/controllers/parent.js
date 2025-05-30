@@ -131,6 +131,81 @@ const handleParentLogin = (req, res) => {
   );
 };
 
+const handleUpdateParent = (req, res) => {
+  const { id } = req.params; // Parent ID from the route
+  const data = req.body;
+
+  const {
+    Password, // Optional
+    ParentName,
+    ParentEmail,
+    ParentPhoneNo,
+    ParentCNIC,
+    Religion,
+    Gender,
+    Address,
+  } = data;
+
+  const fieldsToUpdate = {};
+
+  if (ParentName) fieldsToUpdate.ParentName = ParentName;
+  if (ParentEmail) fieldsToUpdate.ParentEmail = ParentEmail;
+  if (ParentPhoneNo) fieldsToUpdate.ParentPhoneNo = ParentPhoneNo;
+  if (ParentCNIC) fieldsToUpdate.ParentCNIC = ParentCNIC;
+  if (Religion) fieldsToUpdate.Religion = Religion;
+  if (Gender) fieldsToUpdate.Gender = Gender;
+  if (Address) fieldsToUpdate.Address = Address;
+
+  const updateParent = (hashedPassword = null) => {
+    const updateFields = [];
+    const updateValues = [];
+
+    for (const key in fieldsToUpdate) {
+      updateFields.push(`${key} = ?`);
+      updateValues.push(fieldsToUpdate[key]);
+    }
+
+    if (hashedPassword) {
+      updateFields.push("Password = ?");
+      updateValues.push(hashedPassword);
+    }
+
+    if (updateFields.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "No valid fields provided for update" });
+    }
+
+    const sql = `UPDATE ParentTable SET ${updateFields.join(
+      ", "
+    )} WHERE ParentID = ?`;
+    updateValues.push(id);
+
+    db.query(sql, updateValues, (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to update parent", err });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Parent not found" });
+      }
+
+      return res.status(200).json({ message: "Parent updated successfully" });
+    });
+  };
+
+  if (Password && Password.trim() !== "") {
+    bcrypt.hash(Password, 10, (err, hashedPassword) => {
+      if (err) {
+        return res.status(500).json({ error: "Password hashing failed" });
+      }
+      updateParent(hashedPassword);
+    });
+  } else {
+    updateParent(); // No password update
+  }
+};
+
 // ✅ Get All Parents
 const handleGetAllParents = (req, res) => {
   db.query("SELECT * FROM ParentTable", (err, results) => {
@@ -167,4 +242,5 @@ module.exports = {
   handleParentLogin,
   handleGetAllParents,
   handleDeleteParent,
+  handleUpdateParent,
 };

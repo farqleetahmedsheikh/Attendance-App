@@ -145,6 +145,79 @@ const handleStudentLogin = (req, res) => {
   );
 };
 
+const handleUpdateStudent = (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  // Remove empty fields (null, undefined, or empty string)
+  const fieldsToUpdate = {};
+  const isValidDate = (d) => {
+    return d && !isNaN(new Date(d).getTime());
+  };
+
+  for (const key in data) {
+    if (data[key] !== undefined && data[key] !== null && data[key] !== "") {
+      if (
+        (key === "Std_DOB" || key === "Registration_Date") &&
+        isValidDate(data[key])
+      ) {
+        // Format both to YYYY-MM-DD
+        const date = new Date(data[key]);
+        fieldsToUpdate[key] = date.toISOString().split("T")[0]; // Keep only the date part
+      } else {
+        fieldsToUpdate[key] = data[key];
+      }
+    }
+  }
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return res.status(400).json({ error: "No fields provided for update" });
+  }
+
+  const updateQuery = [];
+  const updateValues = [];
+
+  const updateDatabase = (finalFields) => {
+    for (const key in finalFields) {
+      updateQuery.push(`${key} = ?`);
+      updateValues.push(finalFields[key]);
+    }
+
+    const sql = `UPDATE Std_Table SET ${updateQuery.join(
+      ", "
+    )} WHERE Std_ID = ?`;
+    updateValues.push(id);
+
+    db.query(sql, updateValues, (err, result) => {
+      if (err) {
+        console.log(err, "Error");
+        return res
+          .status(500)
+          .json({ error: "Failed to update student", details: err });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Student not found" });
+      }
+
+      return res.status(200).json({ message: "Student updated successfully" });
+    });
+  };
+
+  // If password is included, hash it before update
+  if (fieldsToUpdate.Password) {
+    bcrypt.hash(fieldsToUpdate.Password, 10, (hashErr, hashedPassword) => {
+      if (hashErr) {
+        return res.status(500).json({ error: "Password hashing failed" });
+      }
+      fieldsToUpdate.Password = hashedPassword;
+      updateDatabase(fieldsToUpdate);
+    });
+  } else {
+    updateDatabase(fieldsToUpdate);
+  }
+};
+
 // ✅ Show all students
 const handleGetAllStudents = (req, res) => {
   db.query("SELECT * FROM Std_Table", (err, results) => {
@@ -177,4 +250,5 @@ module.exports = {
   handleAddStudent,
   handleDeleteStudent,
   handleGetAllStudents,
+  handleUpdateStudent,
 };
