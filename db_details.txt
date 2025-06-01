@@ -1,5 +1,5 @@
-create database attandence_app;
- 
+-- Create and select the database
+CREATE DATABASE IF NOT EXISTS attandence_app;
 USE attandence_app;
 
 -- Admin Table
@@ -11,8 +11,6 @@ CREATE TABLE AdminTable (
     Email VARCHAR(100) UNIQUE,
     PhoneNo VARCHAR(20)
 );
-
--- select * from AdminTable;
 
 -- Class Table
 CREATE TABLE ClassTable (
@@ -26,10 +24,8 @@ CREATE TABLE SubjectTable (
     SubjectName VARCHAR(100),
     SubjectCode VARCHAR(50) UNIQUE,
     ClassID INT,
-    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE CASCADE
 );
-
--- select * from TeacherSubjectTable;
 
 -- Teacher Table
 CREATE TABLE TeacherTable (
@@ -48,29 +44,23 @@ CREATE TABLE TeacherTable (
     Address TEXT
 );
 
--- select * from TeacherTable;
 -- Teacher Subject Table
 CREATE TABLE TeacherSubjectTable (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     TeacherID INT,
     SubjectID INT,
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID) ON DELETE CASCADE,
-    FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
+    FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID) ON DELETE CASCADE
 );
-
-Select * from TeacherSubjectTable;
- 
-
 
 -- Class Detail Table
 CREATE TABLE ClassDetailTable (
     ClassDetailID INT PRIMARY KEY AUTO_INCREMENT,
     ClassID INT,
     TeacherID INT,
-    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID),
+    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE CASCADE,
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID)
 );
-
 
 -- Teacher Detail Table
 CREATE TABLE TeacherDetail (
@@ -94,18 +84,19 @@ CREATE TABLE Std_Table (
     GuardianContact VARCHAR(50),
     Password VARCHAR(100),
     Type VARCHAR(50),
-    Status VARCHAR(50) DEFAULT ("Inactive"),
-    Registration_Date DATE DEFAULT (CURRENT_DATE),
-    Registration_Time TIME DEFAULT (CURRENT_TIME),
+    Status VARCHAR(50) DEFAULT 'Inactive',
+    Registration_Date DATE DEFAULT CURRENT_DATE,
+    Registration_Time TIME DEFAULT CURRENT_TIME,
     StdImages VARCHAR(255),
     ClassID INT,
     Religion VARCHAR(50),
     Gender VARCHAR(20),
     Address TEXT,
     GuardianName VARCHAR(100),
-    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
+    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE SET NULL
 );
 
+-- Parent Table
 CREATE TABLE ParentTable (
     ParentID INT PRIMARY KEY AUTO_INCREMENT,
     ParentName VARCHAR(100),
@@ -118,56 +109,14 @@ CREATE TABLE ParentTable (
     Address TEXT
 );
 
+-- PTM Table
 CREATE TABLE PTM_Table (
     PTMID INT PRIMARY KEY AUTO_INCREMENT,
     PTMDate DATE NOT NULL,
+    PTMTime TIME NOT NULL,
     Description TEXT,
     ParentID INT NOT NULL,
     TeacherID INT NOT NULL,
     FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID) ON DELETE CASCADE,
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID) ON DELETE CASCADE
 );
-
-
--- ALTER TABLE Std_Table
--- MODIFY COLUMN Status  VARCHAR(50) DEFAULT ("Inactive");
--- MODIFY COLUMN Registration_Time TIME DEFAULT (CURRENT_TIME);
-
--- select * from SubjectTable;
--- select * from ClassTable; 
--- select * from Std_Table; 
-
-
--- Subject Table
-ALTER TABLE SubjectTable
-DROP FOREIGN KEY fk_subject_class; -- Assuming this is the name of the FK constraint
-
-select * from SubjectTable;
-
-ALTER TABLE SubjectTable
-ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
-ON DELETE CASCADE;
-
--- Std_Table (Student Table)
-ALTER TABLE Std_Table
-DROP FOREIGN KEY std_table_ibfk_1; -- Assuming this is the name of the FK constraint
-
-ALTER TABLE Std_Table
-ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
-ON DELETE SET NULL;
-
--- ClassDetailTable
-ALTER TABLE ClassDetailTable
-DROP FOREIGN KEY classdetailtable_ibfk_3; -- Assuming this is the name of the FK constraint
-
-ALTER TABLE ClassDetailTable
-ADD FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID)
-ON DELETE CASCADE;
-
--- TeacherSubjectTable
-ALTER TABLE TeacherSubjectTable
-DROP FOREIGN KEY teachersubjecttable_ibfk_2; -- Assuming this is the name of the FK constraint
-
-ALTER TABLE TeacherSubjectTable
-ADD FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
-ON DELETE CASCADE;

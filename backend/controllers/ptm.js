@@ -1,3 +1,5 @@
+/** @format */
+
 const db = require("../connection");
 const jwt = require("jsonwebtoken");
 
@@ -99,6 +101,7 @@ const handleGetAllPTMs = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
+    console.log("PTM results:", err);
     if (err) return res.status(500).json({ error: "Failed to fetch PTMs" });
     res.status(200).json(results);
   });

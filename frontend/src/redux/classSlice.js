@@ -6,7 +6,9 @@ const classSlice = createSlice({
   name: "classes",
   initialState: [],
   reducers: {
-    setClasses: (state, action) => action.payload,
+    setClasses: (state, action) => {
+      return action.payload;
+    },
     addClass: (state, action) => {
       state.push(action.payload);
     },

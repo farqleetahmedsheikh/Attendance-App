@@ -1,3 +1,5 @@
+/** @format */
+
 const db = require("../connection");
 
 // add class
@@ -36,6 +38,54 @@ const handleAddClass = (req, res) => {
   );
 };
 
+// Handle update class
+const handleUpdateClass = (req, res) => {
+  const { id } = req.params; // Class ID from the route
+  const data = req.body;
+
+  const { ClassName } = data;
+
+  // Only allow updates to specific fields
+  const fieldsToUpdate = {};
+
+  if (ClassName) fieldsToUpdate.ClassName = ClassName;
+
+  // If no valid fields provided
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    console.log("No valid fields provided for update");
+    return res
+      .status(400)
+      .json({ error: "No valid fields provided for update" });
+  }
+
+  const updateFields = [];
+  const updateValues = [];
+
+  for (const key in fieldsToUpdate) {
+    updateFields.push(`${key} = ?`);
+    updateValues.push(fieldsToUpdate[key]);
+  }
+
+  const sql = `UPDATE ClassTable SET ${updateFields.join(
+    ", "
+  )} WHERE ClassID = ?`;
+  updateValues.push(id);
+
+  db.query(sql, updateValues, (err, result) => {
+    if (err) {
+      console.error("Update error:", err);
+      return res.status(500).json({ error: "Failed to update class", err });
+    }
+
+    if (result.affectedRows === 0) {
+      console.log("Class not found for update");
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    return res.status(200).json({ message: "Class updated successfully" });
+  });
+};
+
 // Show all classes
 const handleGetAllClasses = (req, res) => {
   db.query(
@@ -64,7 +114,7 @@ const handleDeleteClass = (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "class not found" });
     }
- 
+
     res.status(200).json({ message: "class deleted successfully" });
   });
 };
@@ -72,5 +122,6 @@ const handleDeleteClass = (req, res) => {
 module.exports = {
   handleAddClass,
   handleDeleteClass,
+  handleUpdateClass,
   handleGetAllClasses,
 };
