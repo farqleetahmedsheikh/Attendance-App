@@ -1,3 +1,5 @@
+/** @format */
+
 const bcrypt = require("bcrypt");
 const db = require("../connection");
 
@@ -145,7 +147,12 @@ const handleTeacherLogin = (req, res) => {
         );
         return res
           .status(200)
-          .json({ message: "Login successful", teacher, token });
+          .json({
+            message: "Login successful",
+            teacher,
+            token,
+            role: "teacher",
+          });
       });
     }
   );

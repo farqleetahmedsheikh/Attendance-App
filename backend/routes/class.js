@@ -1,7 +1,7 @@
 /** @format */
 
 const express = require("express");
-
+const verifyAdmin = require("../middleware/auth"); // Import the auth middleware
 const {
   handleAddClass,
   handleGetAllClasses,
@@ -11,12 +11,12 @@ const {
 
 const router = express.Router();
 
-router.post("/add", handleAddClass);
+router.post("/add", verifyAdmin, handleAddClass);
 
 router.get("/get-classes", handleGetAllClasses);
 
-router.put("/update/:id", handleUpdateClass);
+router.put("/update/:id", verifyAdmin, handleUpdateClass);
 
-router.delete("/delete/:id", handleDeleteClass);
+router.delete("/delete/:id", verifyAdmin, handleDeleteClass);
 
 module.exports = router;

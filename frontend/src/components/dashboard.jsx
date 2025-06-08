@@ -1,137 +1,35 @@
+/** @format */
+
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setClasses } from "../redux/classSlice";
-import { setStudents } from "../redux/studentSlice";
-import { setParents } from "../redux/parentSlice";
-import { setTeachers } from "../redux/teacherSlice";
-import { setSubjects } from "../redux/subjectSlice";
-import { setPTMs } from "../redux/ptmSlice";
+import {
+  fetchPTMs,
+  fetchClasses,
+  fetchParents,
+  fetchStudents,
+  fetchSubjects,
+  fetchTeachers,
+} from "../services/Api/handleGetApiFunctions";
 import "./dashboard.css";
+import { getMenuLinks } from "../services/Options/menu"; // Import the menu configuration
 
 const AdminDashboard = () => {
   const [openDropdown, setOpenDropdown] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const role = localStorage.getItem("role") || "teacher"; // default to admin if missing
+  const menuList = getMenuLinks(role) || [];
 
+  console.log("Menu List:", menuList);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    fetchPTMs(dispatch);
 
-    const fetchClasses = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/class/get-classes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch classes");
-
-        const data = await res.json();
-        dispatch(setClasses(data)); // Store classes in Redux
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-      }
-    };
-
-    const fetchStudents = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:4000/api/student/get-students",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch students");
-
-        const data = await res.json();
-        dispatch(setStudents(data)); // Store students in Redux
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-
-    const fetchSubjects = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:4000/api/subject/get-subjects",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (!res.ok) throw new Error("Failed to fetch subjects");
-        const data = await res.json();
-        dispatch(setSubjects(data)); // store subjects in redux
-      } catch (err) {
-        console.error("Error fetching subjects:", err);
-      }
-    };
-
-    const fetchTeachers = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:4000/api/teacher/get-teachers",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!res.ok) throw new Error("Failed to fetch teachers");
-        const data = await res.json();
-        dispatch(setTeachers(data)); // store teachers in redux
-      } catch (err) {
-        console.error("Error fetching teachers:", err);
-      }
-    };
-
-    const fetchParents = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const res = await fetch(
-          "http://localhost:4000/api/parent/get-parents",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (!res.ok) throw new Error("Failed to fetch parents");
-        const data = await res.json();
-        dispatch(setParents(data));
-      } catch (error) {
-        console.error("Error fetching parents:", error);
-      }
-    };
-
-        const fetchPTMs = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/ptm/get-ptm", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Failed to fetch PTMs");
-        const data = await res.json();
-        console.log(data , "PTMs fetched successfully");
-        dispatch(setPTMs(data));
-      } catch (err) {
-        console.error("Error fetching PTMs:", err);
-      }
-    };
-
-    fetchPTMs();
-
-    fetchParents();
-    fetchSubjects();
-    fetchTeachers();
-    fetchClasses();
-    fetchStudents();
+    fetchParents(dispatch);
+    fetchSubjects(dispatch);
+    fetchTeachers(dispatch);
+    fetchClasses(dispatch);
+    fetchStudents(dispatch);
   }, [dispatch]);
 
   const toggleDropdown = (section) => {
@@ -140,94 +38,37 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove JWT token
-    navigate("/login/admin"); // Redirect to login
+    navigate("/"); // Redirect to login
   };
 
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
         <Link className="title" to="/dashboard/">
-          <h2>Admin Panel</h2>
+          <h2>{`${role} Panel`}</h2>
         </Link>
         <ul>
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("class")}
-          >
-            Class ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "class" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/class/manage">Manage Class</Link>
-          </div>
-
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("subject")}
-          >
-            Subject ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "subject" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/subject/manage">Manage Subject</Link>
-          </div>
-
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("teacher")}
-          >
-            Teacher ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "teacher" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/teacher/manage">Manage Teacher</Link>
-          </div>
-
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("parent")}
-          >
-            Parent ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "parent" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/parent/manage">Manage Parent</Link>
-          </div>
-
-          <li
-            className="dropdown-title"
-            onClick={() => toggleDropdown("student")}
-          >
-            Student ▾
-          </li>
-          <div
-            className={`dropdown-links ${
-              openDropdown === "student" ? "open" : ""
-            }`}
-          >
-            <Link to="/dashboard/student/manage">Manage Student</Link>
-          </div>
-
-          <li className="dropdown-title" onClick={() => toggleDropdown("ptm")}>
-            PTM ▾
-          </li>
-          <div
-            className={`dropdown-links ${openDropdown === "ptm" ? "open" : ""}`}
-          >
-            <Link to="/dashboard/ptm/manage">Manage PTM</Link>
-          </div>
+          {menuList.map((section) => (
+            <li key={section.title}>
+              <div
+                className="dropdown-title"
+                onClick={() => toggleDropdown(section.title)}
+              >
+                {section.title} ▾
+              </div>
+              <div
+                className={`dropdown-links ${
+                  openDropdown === section.title ? "open" : ""
+                }`}
+              >
+                {section.links.map((link) => (
+                  <Link key={link.path} to={link.path}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </li>
+          ))}
         </ul>
 
         {/* 🔒 Logout Button */}

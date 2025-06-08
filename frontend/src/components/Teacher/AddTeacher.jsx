@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTeacher } from "../../redux/teacherSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { handleAddTeacher } from "../../services/Api/handlePostApiFunctions";
 import "./AddTeacher.css";
 
 const TeacherForm = () => {
@@ -62,16 +63,7 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/teacher/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
+      const res = handleAddTeacher(formData);
       if (!res.ok) {
         throw new Error("Failed to add teacher");
       }

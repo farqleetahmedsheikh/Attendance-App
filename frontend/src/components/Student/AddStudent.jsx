@@ -6,6 +6,7 @@ import { setStudents } from "../../redux/studentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import "./AddStudent.css";
+import { handleAddStudent } from "../../services/Api/handlePostApiFunctions";
 
 const StudentForm = () => {
   const genders = [
@@ -61,15 +62,7 @@ const StudentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/student/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = handleAddStudent(formData);
 
       if (!res.ok) {
         throw new Error("Failed to add student");

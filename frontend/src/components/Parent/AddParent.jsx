@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setParents } from "../../redux/parentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "./AddParent.css"; // Assuming you have some styles for the form
+import { handleAddParent } from "../../services/Api/handlePostApiFunctions";
 
 const ParentForm = () => {
   const genders = [
@@ -35,24 +36,19 @@ const ParentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/parent/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await handleAddParent(formData); // res is JSON now
+      console.log("Response from handleAddParent:", res);
 
-      const saved = await res.json();
-      if (!res.ok) throw new Error(saved.error || "Failed to add parent");
+      // ✅ Check for success based on the backend's message or structure
+      if (!res || res.error) {
+        throw new Error(res.error || "Failed to add parent");
+      }
       const parentPayload = {
-        ParentID: saved.ParentId,
-        ParentName: saved.ParentName,
-        ParentEmail: saved.ParentEmail,
-        ParentPhoneNo: saved.ParentPhoneNo,
-        Address: saved.Address,
+        ParentID: res.ParentId,
+        ParentName: res.ParentName,
+        ParentEmail: res.ParentEmail,
+        ParentPhoneNo: res.ParentPhoneNo,
+        Address: res.Address,
       };
       dispatch(setParents(parentPayload));
       toast.success("Parent added successfully!", {
@@ -65,6 +61,7 @@ const ParentForm = () => {
         theme: "light",
       });
     } catch (err) {
+      console.error("Error adding parent:", err);
       toast.error("Failed to add parent!", {
         position: "top-right",
         autoClose: 3000,

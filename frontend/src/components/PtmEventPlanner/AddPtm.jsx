@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { addPTM } from "../../redux/ptmSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { handleAddPTM } from "../../services/Api/handlePostApiFunctions";
 // import "./PTM.css";
 
 const AddPTM = () => {
@@ -43,16 +44,7 @@ const AddPTM = () => {
     };
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/ptm/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
+      const res = handleAddPTM(payload);
       if (!res.ok) throw new Error("Failed to add PTM");
 
       const data = await res.json();

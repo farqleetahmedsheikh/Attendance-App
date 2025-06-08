@@ -20,6 +20,7 @@ function App() {
         <Route path="/login/admin" element={<Login role="admin" />} />
         <Route path="/login/teacher" element={<Login role="teacher" />} />
         <Route path="/login/student" element={<Login role="student" />} />
+        <Route path="/login/parent" element={<Login role="parent" />} />
         {/* Admin dashboard with nested routes */}
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route path="student/manage" element={<Student />} />

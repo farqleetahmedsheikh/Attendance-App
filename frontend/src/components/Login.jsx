@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -33,11 +33,18 @@ const Login = ({ role }) => {
         draggable: true,
         theme: "light",
       });
-      localStorage.setItem("token", data.token); // ✔️ store raw string only
 
+      localStorage.setItem("token", data.token); // ✔️ store raw string only
+      localStorage.setItem("role", data.role); // ✔️ store role in localStorage
       setTimeout(() => {
         if (role === "admin") {
           navigate("/dashboard/class/manage");
+        } else if (role === "teacher") {
+          navigate("/dashboard/teacher/manage");
+        } else if (role === "student") {
+          navigate("/dashboard/student/manage");
+        } else if (role === "parent") {
+          navigate("/dashboard/parent/manage");
         }
       }, 3000);
     } else {

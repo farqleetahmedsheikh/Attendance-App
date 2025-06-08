@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
@@ -12,11 +14,15 @@ const HomePage = () => {
     },
     teacher: {
       title: "Teacher",
-      description: "Manage attendance, subjects and student data.",
+      description: "Manage attendance of your students and update records.",
     },
     student: {
       title: "Student",
-      description: "Check attendance, notices and updates.",
+      description: "Check attendance and view your records.",
+    },
+    parent: {
+      title: "Parent",
+      description: "Check attendance of your child and stay updated.",
     },
   };
 

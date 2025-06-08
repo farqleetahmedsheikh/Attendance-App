@@ -1,3 +1,5 @@
+/** @format */
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../connection");
@@ -123,6 +125,7 @@ const handleParentLogin = (req, res) => {
             ParentID: parent.ParentID,
             ParentName: parent.ParentName,
             ParentEmail: parent.ParentEmail,
+            role: "parent",
           },
           token,
         });

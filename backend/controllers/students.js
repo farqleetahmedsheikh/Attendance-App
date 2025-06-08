@@ -139,7 +139,12 @@ const handleStudentLogin = (req, res) => {
         );
         return res
           .status(200)
-          .json({ message: "Login successful", student, token });
+          .json({
+            message: "Login successful",
+            student,
+            token,
+            role: "student",
+          });
       });
     }
   );

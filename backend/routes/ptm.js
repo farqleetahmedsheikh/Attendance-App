@@ -1,3 +1,5 @@
+/** @format */
+
 const express = require("express");
 
 const {
@@ -6,15 +8,15 @@ const {
   handleDeletePTM,
   handleUpdatePTM,
 } = require("../controllers/ptm");
-
+const verifyAdmin = require("../middleware/auth"); // Import the auth middleware
 const router = express.Router();
 
-router.post("/add", handleAddPTM);
+router.post("/add", verifyAdmin, handleAddPTM);
 
 router.get("/get-ptm", handleGetAllPTMs);
 
-router.put("/update/:id", handleUpdatePTM);
+router.put("/update/:id", verifyAdmin, handleUpdatePTM);
 
-router.delete("/delete/:id", handleDeletePTM);
+router.delete("/delete/:id", verifyAdmin, handleDeletePTM);
 
 module.exports = router;

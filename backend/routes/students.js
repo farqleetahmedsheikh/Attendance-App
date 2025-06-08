@@ -1,3 +1,5 @@
+/** @format */
+
 const express = require("express");
 
 const {
@@ -7,17 +9,17 @@ const {
   handleGetAllStudents,
   handleUpdateStudent,
 } = require("../controllers/students");
-
+const verifyAdmin = require("../middleware/auth"); // Import the auth middleware
 const router = express.Router();
 
-router.post("/add", handleAddStudent);
+router.post("/add", verifyAdmin, handleAddStudent);
 
 router.post("/login", handleStudentLogin);
 
 router.get("/get-students", handleGetAllStudents);
 
-router.put("/update/:id", handleUpdateStudent);
+router.put("/update/:id", verifyAdmin, handleUpdateStudent);
 
-router.delete("/delete/:id", handleDeleteStudent);
+router.delete("/delete/:id", verifyAdmin, handleDeleteStudent);
 
 module.exports = router;

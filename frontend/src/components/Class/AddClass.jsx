@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { addClass } from "../../redux/classSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "./AddClass.css"; // Make sure this contains your .class-form CSS
+import { handleAddClass } from "../../services/Api/handlePostApiFunctions";
 
 const ClassForm = () => {
   const dispatch = useDispatch();
@@ -19,16 +20,7 @@ const ClassForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/class/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
+      const res = handleAddClass(formData);
       if (!res.ok) throw new Error("Failed to add class");
       const data = await res.json();
       console.log("Class added:", data);
