@@ -36,15 +36,16 @@ const Login = ({ role }) => {
 
       localStorage.setItem("token", data.token); // ✔️ store raw string only
       localStorage.setItem("role", data.role); // ✔️ store role in localStorage
+      localStorage.setItem("userId", data.ParentID || data.id || data.ID); // ✔️ store user ID
       setTimeout(() => {
         if (role === "admin") {
           navigate("/dashboard/class/manage");
         } else if (role === "teacher") {
-          navigate("/dashboard/teacher/manage");
+          navigate("/dashboard/teacher/attendance");
         } else if (role === "student") {
-          navigate("/dashboard/student/manage");
+          navigate("/dashboard/student/attendance");
         } else if (role === "parent") {
-          navigate("/dashboard/parent/manage");
+          navigate("/dashboard/parent/attendance");
         }
       }, 3000);
     } else {

@@ -14,7 +14,7 @@ router.post("/add", verifyAdmin,handleAddTeacher);
 
 router.post("/login", handleTeacherLogin);
 
-router.get("/get-teachers", verifyAdmin,handleGetAllTeachers);
+router.get("/get-teachers",handleGetAllTeachers);
 
 router.put("/update/:id", verifyAdmin,handleUpdateTeacher);
 

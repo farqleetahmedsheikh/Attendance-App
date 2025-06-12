@@ -92,26 +92,32 @@ const handleAddParent = (req, res) => {
 
 // ✅ Login Parent
 const handleParentLogin = (req, res) => {
-  const { ParentEmail, Password } = req.body;
+  const { Email, Password } = req.body;
+  console.log("req body", req.body);
 
   db.query(
     "SELECT * FROM ParentTable WHERE ParentEmail = ?",
-    [ParentEmail],
+    [Email],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Database error" });
 
       if (results.length === 0) {
+        console.log("Parent not found with email:", Email);
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
       const parent = results[0];
 
       bcrypt.compare(Password, parent.Password, (bcryptErr, match) => {
-        if (bcryptErr)
+        if (bcryptErr) {
+          console.log("Error comparing passwords:", bcryptErr);
           return res.status(500).json({ error: "Password comparison failed" });
+        }
 
-        if (!match)
+        if (!match) {
+          console.log("Not found", match);
           return res.status(401).json({ error: "Invalid credentials" });
+        }
 
         const token = jwt.sign(
           { userId: parent.ParentID, role: "parent" },
@@ -121,12 +127,11 @@ const handleParentLogin = (req, res) => {
 
         res.status(200).json({
           message: "Login successful",
-          parent: {
-            ParentID: parent.ParentID,
-            ParentName: parent.ParentName,
-            ParentEmail: parent.ParentEmail,
-            role: "parent",
-          },
+
+          ParentID: parent.ParentID,
+          ParentName: parent.ParentName,
+          ParentEmail: parent.ParentEmail,
+          role: "parent",
           token,
         });
       });

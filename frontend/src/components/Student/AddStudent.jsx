@@ -102,7 +102,8 @@ const StudentForm = () => {
         Address: "",
         GuardianName: "",
       });
-    } catch {
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to add student!", {
         position: "top-right",
         autoClose: 3000,

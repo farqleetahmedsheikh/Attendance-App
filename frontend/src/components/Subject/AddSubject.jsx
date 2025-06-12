@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addSubject } from "../../redux/subjectSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "./AddSubject.css"; // Assuming you have some styles for the form
-import { handleAddClass } from "../../services/Api/handlePostApiFunctions";
+import {
+  handleAddSubject,
+} from "../../services/Api/handlePostApiFunctions";
 
 const AddSubject = () => {
   const dispatch = useDispatch();
@@ -27,11 +29,12 @@ const AddSubject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = handleAddClass(formData);
+      const res = await handleAddSubject(formData);
+      console.log("Response from handleAddClass:", res);
 
-      if (!res.ok) throw new Error("Failed to add subject");
+      if (!res) throw new Error("Failed to add subject");
 
-      const newSubject = await res.json();
+      const newSubject = res;
 
       const subjectToStore = {
         SubjectID: newSubject.subjectId,
@@ -56,6 +59,7 @@ const AddSubject = () => {
         ClassID: "",
       });
     } catch (error) {
+      console.log(error);
       toast.error("Failed to add subject. Try again.", {
         position: "top-right",
         autoClose: 3000,

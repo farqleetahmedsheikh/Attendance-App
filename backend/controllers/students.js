@@ -46,7 +46,9 @@ const handleAddStudent = (req, res) => {
     "SELECT * FROM Std_Table WHERE Std_Email = ? OR Std_B_Form = ? OR RollNo = ?",
     [Std_Email, Std_B_Form, RollNo],
     (err, results) => {
-      if (err) return res.status(500).json({ error: "Database error" });
+      if (err) {
+        return res.status(500).json({ error: "Database error" });
+      }
 
       if (results.length > 0) {
         return res.status(400).json({
@@ -137,14 +139,12 @@ const handleStudentLogin = (req, res) => {
             expiresIn: "1h",
           }
         );
-        return res
-          .status(200)
-          .json({
-            message: "Login successful",
-            student,
-            token,
-            role: "student",
-          });
+        return res.status(200).json({
+          message: "Login successful",
+          student,
+          token,
+          role: "student",
+        });
       });
     }
   );
@@ -195,7 +195,6 @@ const handleUpdateStudent = (req, res) => {
 
     db.query(sql, updateValues, (err, result) => {
       if (err) {
-        console.log(err, "Error");
         return res
           .status(500)
           .json({ error: "Failed to update student", details: err });

@@ -78,6 +78,7 @@ const handleAddSubject = async (formData) => {
     body: JSON.stringify(formData),
   });
   const data = await res.json();
+  console.log(data);
   return data;
 };
 export {

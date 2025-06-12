@@ -4,6 +4,7 @@ const db = require("../connection");
 
 const addSubject = (req, res) => {
   const { SubjectName, SubjectCode, ClassID } = req.body;
+  console.log("Received data:", req.body);
 
   // Step 1: Find ClassID from ClassName
   db.query(

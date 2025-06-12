@@ -25,7 +25,6 @@ const StudentList = () => {
   const students = useSelector((state) => state.students.students);
   const parents = useSelector((state) => state.parents.parents || []);
   const classes = useSelector((state) => state.classes);
-  console.log(students, "Students from Redux");
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);

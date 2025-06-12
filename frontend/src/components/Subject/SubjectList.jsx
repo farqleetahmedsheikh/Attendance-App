@@ -1,5 +1,5 @@
 /** @format */
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSubjects } from "../../redux/subjectSlice";
 import { ToastContainer, toast } from "react-toastify";
