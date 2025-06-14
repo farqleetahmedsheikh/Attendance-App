@@ -99,7 +99,6 @@ const fetchPTMs = async (dispatch) => {
     });
     if (!res.ok) throw new Error("Failed to fetch PTMs");
     const data = await res.json();
-    console.log(data, "PTMs fetched successfully");
     dispatch(setPTMs(data));
   } catch (err) {
     console.error("Error fetching PTMs:", err);

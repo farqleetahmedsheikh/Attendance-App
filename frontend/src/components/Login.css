@@ -9,6 +9,7 @@
 }
 
 .login-container h2 {
+  text-transform: capitalize;
   margin-bottom: 20px;
 }
 

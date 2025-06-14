@@ -21,10 +21,8 @@ const AdminDashboard = () => {
   const role = localStorage.getItem("role") || "teacher"; // default to admin if missing
   const menuList = getMenuLinks(role) || [];
 
-  console.log("Menu List:", menuList);
   useEffect(() => {
     fetchPTMs(dispatch);
-
     fetchParents(dispatch);
     fetchSubjects(dispatch);
     fetchTeachers(dispatch);

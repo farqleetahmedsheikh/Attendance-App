@@ -19,10 +19,6 @@ const AttendanceView = ({ role }) => {
 
   const userId = localStorage.getItem("userId");
 
-  console.log(userId);
-  console.log(classes);
-  console.log(students);
-  console.log(subjects);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
 
@@ -32,7 +28,7 @@ const AttendanceView = ({ role }) => {
       const result = students.filter(
         (student) => String(student.ParentID) === String(userId)
       );
-      console.log("Filtered Students for Parent:", result);
+
       setFilteredStudents(result);
     } else {
       setFilteredStudents(students);
@@ -42,12 +38,16 @@ const AttendanceView = ({ role }) => {
   // Update subjects when student is selected (for parent & teacher)
   useEffect(() => {
     if (filters.studentId) {
-      const student = students.find((s) => s._id === filters.studentId);
-      const classId = student?.ClassID;
+      const student = students.find(
+        (s) => s.Std_ID === Number(filters.studentId)
+      ); // ✅ Fix ID
+
+      const classId = student?.ClassID; // ✅ Make sure this matches your actual field name
+
       setFilters((prev) => ({ ...prev, classId: classId || "" }));
 
       const matchedSubjects = subjects.filter(
-        (subject) => subject.ClassID === classId
+        (subject) => subject.ClassID === classId // ✅ Match with your subject's field
       );
       setFilteredSubjects(matchedSubjects);
     }
@@ -60,7 +60,7 @@ const AttendanceView = ({ role }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Filters:", filters);
+
     // Add API request or Redux dispatch here
   };
 
