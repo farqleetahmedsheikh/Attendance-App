@@ -2,6 +2,10 @@
 
 const bcrypt = require("bcrypt");
 const db = require("../connection");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Replace with your actual secret key
 
 // ✅ Signup Teacher
 const handleAddTeacher = (req, res) => {
@@ -118,11 +122,11 @@ const handleAddTeacher = (req, res) => {
 
 // ✅ Login Teacher
 const handleTeacherLogin = (req, res) => {
-  const { Std_Email, Password } = req.body;
+  const { Email, Password } = req.body;
 
   db.query(
-    "SELECT * FROM TeacherTable WHERE Std_Email = ?",
-    [Std_Email],
+    "SELECT * FROM TeacherTable WHERE TeacherEmail = ?",
+    [Email],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Database error" });
 
@@ -139,20 +143,19 @@ const handleTeacherLogin = (req, res) => {
         if (!match)
           return res.status(401).json({ error: "Invalid credentials" });
         const token = jwt.sign(
-          { userId: admin.AdminID, role: "teacher" },
+          { userId: teacher.ID, role: "teacher" },
           SECRET_KEY,
           {
             expiresIn: "1h",
           }
         );
-        return res
-          .status(200)
-          .json({
-            message: "Login successful",
-            teacher,
-            token,
-            role: "teacher",
-          });
+        return res.status(200).json({
+          message: "Login successful",
+          teacher,
+          token,
+          userId: teacher.TeacherID,
+          role: "teacher",
+        });
       });
     }
   );

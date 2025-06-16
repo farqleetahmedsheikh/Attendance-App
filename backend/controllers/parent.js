@@ -128,7 +128,7 @@ const handleParentLogin = (req, res) => {
         res.status(200).json({
           message: "Login successful",
 
-          ParentID: parent.ParentID,
+          userId: parent.ParentID,
           ParentName: parent.ParentName,
           ParentEmail: parent.ParentEmail,
           role: "parent",

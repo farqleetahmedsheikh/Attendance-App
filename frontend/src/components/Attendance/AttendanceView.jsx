@@ -57,6 +57,32 @@ const AttendanceView = ({ role }) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
+  // Show student subject only
+  useEffect(() => {
+    console.log("students:", students);
+    console.log("userId:", userId);
+    if (role === "student" && students.length > 0 && subjects.length > 0) {
+      const student = students.find((s) => String(s.Std_ID) === String(userId));
+      console.log("Logged in student:", student);
+      if (student) {
+        const classId = student.ClassID;
+        console.log("Class ID:", classId);
+
+        setFilters((prev) => ({
+          ...prev,
+          studentId: student.Std_ID,
+          classId: classId || "",
+        }));
+
+        const matchedSubjects = subjects.filter(
+          (subject) => subject.ClassID === classId
+        );
+        setFilteredSubjects(matchedSubjects);
+      } else {
+        console.warn("Logged in student not found in students list.");
+      }
+    }
+  }, [role, students, subjects, userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -2,7 +2,10 @@
 
 const bcrypt = require("bcrypt");
 const db = require("../connection");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Replace with your actual secret key
 // Signup student
 const handleAddStudent = (req, res) => {
   const {
@@ -112,11 +115,11 @@ const handleAddStudent = (req, res) => {
 
 // ✅ Login student
 const handleStudentLogin = (req, res) => {
-  const { Std_Email, Password } = req.body;
+  const { Email, Password } = req.body;
 
   db.query(
     "SELECT * FROM Std_Table WHERE Std_Email = ?",
-    [Std_Email],
+    [Email],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Database error" });
 
@@ -133,7 +136,7 @@ const handleStudentLogin = (req, res) => {
         if (!match)
           return res.status(401).json({ error: "Invalid credentials" });
         const token = jwt.sign(
-          { userId: admin.AdminID, role: "student" },
+          { userId: student.ID, role: "student" },
           SECRET_KEY,
           {
             expiresIn: "1h",
@@ -143,6 +146,7 @@ const handleStudentLogin = (req, res) => {
           message: "Login successful",
           student,
           token,
+          userId: student.Std_ID,
           role: "student",
         });
       });
