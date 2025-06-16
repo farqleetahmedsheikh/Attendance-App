@@ -18,7 +18,7 @@ const AdminDashboard = () => {
   const [openDropdown, setOpenDropdown] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const role = localStorage.getItem("role") || "teacher"; // default to admin if missing
+  const role = localStorage.getItem("role") || "admin"; // default to admin if missing
   const menuList = getMenuLinks(role) || [];
 
   useEffect(() => {

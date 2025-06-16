@@ -44,7 +44,6 @@ const handleUpdatePTM = (req, res) => {
 
   db.query("SELECT * FROM PTM_Table WHERE PTMID = ?", [id], (err, results) => {
     if (err) {
-      console.log("Database error:", err);
       return res.status(500).json({ error: "Database error", err });
     }
 
@@ -78,7 +77,6 @@ const handleUpdatePTM = (req, res) => {
 
     db.query(updateQuery, updateValues, (updateErr, updateResult) => {
       if (updateErr) {
-        console.error("Update error:", updateErr);
         return res
           .status(500)
           .json({ error: "Failed to update PTM", updateErr });
@@ -101,7 +99,6 @@ const handleGetAllPTMs = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    console.log("PTM results:", err);
     if (err) return res.status(500).json({ error: "Failed to fetch PTMs" });
     res.status(200).json(results);
   });

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./AttendanceView.css"; // Custom CSS file
+// import { use } from "react";
 
 const AttendanceView = ({ role }) => {
   const [filters, setFilters] = useState({
@@ -16,11 +17,13 @@ const AttendanceView = ({ role }) => {
   const classes = useSelector((state) => state.classes);
   const students = useSelector((state) => state.students.students);
   const subjects = useSelector((state) => state.subjects || []);
+  const teachers = useSelector((state) => state.teachers.teachers);
 
   const userId = localStorage.getItem("userId");
 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
+  // const [filteredClasses, setFilteredClasses] = useState([]);
 
   // For parent role: filter students by parentId
   useEffect(() => {
@@ -34,6 +37,24 @@ const AttendanceView = ({ role }) => {
       setFilteredStudents(students);
     }
   }, [role, students, userId]);
+
+  useEffect(() => {
+    if (role === "teacher") {
+      const teacher = teachers.find(
+        (teacher) => Number(teacher.TeacherID) === Number(userId)
+      );
+      const teacherSubjects = subjects.filter(
+        (subject) => Number(teacher.SubjectIDs) === Number(subject?.SubjectID) // ✅ Ensure this matches your subject's field for teacher ID
+      );
+
+      // setFilteredSubjects(teacherSubjects);
+      // console.log("Teacher's subjects:", teacherSubjects);
+      const filteredClassIds = teacherSubjects.find(
+        (subject) => Number(subject.ClassID) === Number(classes.ClassID)
+      );
+      console.log("Filtered Classes:", filteredClassIds);
+    }
+  }, [role, userId]); // ✅ Ensure this matches your subject's field for teacher ID
 
   // Update subjects when student is selected (for parent & teacher)
   useEffect(() => {
@@ -59,7 +80,9 @@ const AttendanceView = ({ role }) => {
   };
   // Show student subject only
   useEffect(() => {
+    console.log("teachers:", teachers);
     console.log("students:", students);
+    console.log("subjects:", subjects);
     console.log("userId:", userId);
     if (role === "student" && students.length > 0 && subjects.length > 0) {
       const student = students.find((s) => String(s.Std_ID) === String(userId));
@@ -118,17 +141,17 @@ const AttendanceView = ({ role }) => {
 
         {role === "teacher" && (
           <div className="form-group">
-            <label>Select Class</label>
+            <label>Select Subject</label>
             <select
-              name="classId"
-              value={filters.classId}
+              name="subjectId"
+              value={filters.subjectId}
               onChange={handleChange}
               required
             >
-              <option value="">--Select Class--</option>
-              {classes.map((cls) => (
-                <option key={cls._id} value={cls._id}>
-                  {cls.name}
+              <option value="">--Select Subject--</option>
+              {filteredSubjects.map((subject) => (
+                <option key={subject.SubjectID} value={subject.SubjectID}>
+                  {subject.SubjectName - subject.className}
                 </option>
               ))}
             </select>
@@ -154,22 +177,24 @@ const AttendanceView = ({ role }) => {
           </div>
         )}
 
-        <div className="form-group">
-          <label>Select Subject</label>
-          <select
-            name="subjectId"
-            value={filters.subjectId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">--Select Subject--</option>
-            {filteredSubjects.map((subject) => (
-              <option key={subject.SubjectID} value={subject.SubjectID}>
-                {subject.SubjectName}
-              </option>
-            ))}
-          </select>
-        </div>
+        {role !== "teacher" && (
+          <div className="form-group">
+            <label>Select Subject</label>
+            <select
+              name="subjectId"
+              value={filters.subjectId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">--Select Subject--</option>
+              {filteredSubjects.map((subject) => (
+                <option key={subject.SubjectID} value={subject.SubjectID}>
+                  {subject.SubjectName}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <button type="submit" className="submit-btn">
           View Attendance
