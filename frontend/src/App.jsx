@@ -12,6 +12,7 @@ import Class from "./components/Class/Class";
 import Parent from "./components/Parent/Parent";
 import PTM from "./components/PtmEventPlanner/PtmPlanner";
 import AttendanceView from "./components/Attendance/AttendanceView";
+import AttendanceMark from "./components/Attendance/AttendanceMark";
 
 function App() {
   return (
@@ -42,6 +43,10 @@ function App() {
           <Route
             path="teacher/attendance"
             element={<AttendanceView role="teacher" />}
+          />
+          <Route
+            path="attendance/mark"
+            element={<AttendanceMark role="teacher" />}
           />
         </Route>
       </Routes>

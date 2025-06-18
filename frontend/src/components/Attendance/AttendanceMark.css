@@ -1,0 +1,115 @@
+/* MarkAttendance.css */
+
+.mark-attendance-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.mark-attendance-container h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.mark-attendance-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mark-attendance-container th,
+.mark-attendance-container td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.mark-attendance-container th {
+  background-color: #0077cc;
+  color: white;
+  font-weight: 600;
+}
+
+.mark-attendance-container tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.mark-attendance-container td {
+  color: #555;
+}
+
+.mark-btn {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mark-btn:hover {
+  background-color: #005fa3;
+}
+
+@media screen and (max-width: 768px) {
+  .mark-attendance-container table {
+    font-size: 0.85rem;
+  }
+
+  .mark-attendance-container th,
+  .mark-attendance-container td {
+    padding: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mark-attendance-container {
+    padding: 1rem;
+  }
+
+  .mark-attendance-container h3 {
+    font-size: 1.4rem;
+  }
+
+  .mark-attendance-container table,
+  .mark-attendance-container thead,
+  .mark-attendance-container tbody,
+  .mark-attendance-container th,
+  .mark-attendance-container td,
+  .mark-attendance-container tr {
+    display: block;
+  }
+
+  .mark-attendance-container tr {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .mark-attendance-container td {
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .mark-attendance-container td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .mark-attendance-container th {
+    display: none;
+  }
+}

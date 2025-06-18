@@ -29,19 +29,23 @@ const menuConfig = {
   ],
   teacher: [
     {
-      title: "Attendance",
+      title: "Mark Attendance",
+      links: [{ label: "Mark Attendance", path: "/dashboard/attendance/mark" }],
+    },
+    {
+      title: "View Attendance",
       links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
     },
   ],
   student: [
     {
-      title: "Attendance",
+      title: "View Attendance",
       links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
     },
   ],
   parent: [
     {
-      title: "Attendance",
+      title: "View Attendance",
       links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
     },
   ],

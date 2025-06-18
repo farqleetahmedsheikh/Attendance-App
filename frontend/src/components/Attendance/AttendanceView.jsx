@@ -1,11 +1,9 @@
 /** @format */
-
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import "./AttendanceView.css"; // Custom CSS file
-// import { use } from "react";
+import "./AttendanceView.css";
 
-const AttendanceView = ({ role }) => {
+const AttendanceView = () => {
   const [filters, setFilters] = useState({
     fromDate: "",
     toDate: "",
@@ -20,10 +18,11 @@ const AttendanceView = ({ role }) => {
   const teachers = useSelector((state) => state.teachers.teachers);
 
   const userId = localStorage.getItem("userId");
+  const role = localStorage.getItem("role");
 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
-  // const [filteredClasses, setFilteredClasses] = useState([]);
+  const [filteredClasses, setFilteredClasses] = useState([]);
 
   // For parent role: filter students by parentId
   useEffect(() => {
@@ -31,66 +30,92 @@ const AttendanceView = ({ role }) => {
       const result = students.filter(
         (student) => String(student.ParentID) === String(userId)
       );
-
       setFilteredStudents(result);
     } else {
       setFilteredStudents(students);
     }
   }, [role, students, userId]);
 
+  // For teacher: filter subjects and classes
   useEffect(() => {
-    if (role === "teacher") {
+    if (
+      role === "teacher" &&
+      teachers.length > 0 &&
+      subjects.length > 0 &&
+      classes.length > 0
+    ) {
       const teacher = teachers.find(
         (teacher) => Number(teacher.TeacherID) === Number(userId)
       );
+      if (!teacher) return;
+
       const teacherSubjects = subjects.filter(
-        (subject) => Number(teacher.SubjectIDs) === Number(subject?.SubjectID) // ✅ Ensure this matches your subject's field for teacher ID
+        (subject) => Number(teacher.SubjectIDs) === Number(subject?.SubjectID)
       );
 
-      // setFilteredSubjects(teacherSubjects);
-      // console.log("Teacher's subjects:", teacherSubjects);
-      const filteredClassIds = teacherSubjects.find(
-        (subject) => Number(subject.ClassID) === Number(classes.ClassID)
+      const subjectsWithClassName = teacherSubjects.map((subject) => {
+        const classInfo = classes.find(
+          (cls) => Number(cls.ClassID) === Number(subject.ClassID)
+        );
+        return {
+          ...subject,
+          ClassName: classInfo?.ClassName || "Unknown Class",
+        };
+      });
+
+      setFilteredSubjects(subjectsWithClassName);
+
+      const classIds = teacherSubjects.map((subj) => Number(subj.ClassID));
+      const matchedClasses = classes.filter((cls) =>
+        classIds.includes(Number(cls.ClassID))
       );
-      console.log("Filtered Classes:", filteredClassIds);
+
+      setFilteredClasses(matchedClasses);
     }
-  }, [role, userId]); // ✅ Ensure this matches your subject's field for teacher ID
+  }, [role, userId, teachers, subjects, classes]);
 
-  // Update subjects when student is selected (for parent & teacher)
+  // For teacher: filter students based on selected subject
+  useEffect(() => {
+    if (role === "teacher" && filters.subjectId && subjects.length > 0) {
+      const selectedSubject = subjects.find(
+        (subject) => String(subject.SubjectID) === String(filters.subjectId)
+      );
+
+      if (selectedSubject) {
+        const classId = selectedSubject.ClassID;
+
+        const matchedStudents = students.filter(
+          (student) => String(student.ClassID) === String(classId)
+        );
+
+        setFilteredStudents(matchedStudents);
+      }
+    }
+  }, [role, filters.subjectId, subjects, students]);
+
+  // For parent & teacher: update classId and subjects when student is selected
   useEffect(() => {
     if (filters.studentId) {
       const student = students.find(
         (s) => s.Std_ID === Number(filters.studentId)
-      ); // ✅ Fix ID
+      );
 
-      const classId = student?.ClassID; // ✅ Make sure this matches your actual field name
-
+      const classId = student?.ClassID;
       setFilters((prev) => ({ ...prev, classId: classId || "" }));
 
       const matchedSubjects = subjects.filter(
-        (subject) => subject.ClassID === classId // ✅ Match with your subject's field
+        (subject) => subject.ClassID === classId
       );
       setFilteredSubjects(matchedSubjects);
     }
   }, [filters.studentId, students, subjects]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-  // Show student subject only
+  // For student role
   useEffect(() => {
-    console.log("teachers:", teachers);
-    console.log("students:", students);
-    console.log("subjects:", subjects);
-    console.log("userId:", userId);
     if (role === "student" && students.length > 0 && subjects.length > 0) {
       const student = students.find((s) => String(s.Std_ID) === String(userId));
-      console.log("Logged in student:", student);
       if (student) {
         const classId = student.ClassID;
-        console.log("Class ID:", classId);
-
         setFilters((prev) => ({
           ...prev,
           studentId: student.Std_ID,
@@ -101,16 +126,19 @@ const AttendanceView = ({ role }) => {
           (subject) => subject.ClassID === classId
         );
         setFilteredSubjects(matchedSubjects);
-      } else {
-        console.warn("Logged in student not found in students list.");
       }
     }
   }, [role, students, subjects, userId]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Add API request or Redux dispatch here
+    // Submit logic goes here
+    console.log("Filters submitted:", filters);
   };
 
   return (
@@ -151,7 +179,7 @@ const AttendanceView = ({ role }) => {
               <option value="">--Select Subject--</option>
               {filteredSubjects.map((subject) => (
                 <option key={subject.SubjectID} value={subject.SubjectID}>
-                  {subject.SubjectName - subject.className}
+                  {subject.SubjectName} - {subject.ClassName}
                 </option>
               ))}
             </select>
@@ -166,6 +194,10 @@ const AttendanceView = ({ role }) => {
               value={filters.studentId}
               onChange={handleChange}
               required
+              disabled={
+                (role === "teacher" && !filters.subjectId) ||
+                filteredStudents.length === 0
+              }
             >
               <option value="">--Select Student--</option>
               {filteredStudents.map((student) => (
@@ -185,6 +217,7 @@ const AttendanceView = ({ role }) => {
               value={filters.subjectId}
               onChange={handleChange}
               required
+              disabled={!filters.studentId}
             >
               <option value="">--Select Subject--</option>
               {filteredSubjects.map((subject) => (
