@@ -40,7 +40,6 @@ pids/
 *.tar.gz
 
 # Uploaded files
-uploads/
 public/uploads/
 tmp/
 temp/
