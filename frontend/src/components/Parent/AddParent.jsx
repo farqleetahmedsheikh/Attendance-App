@@ -1,12 +1,13 @@
 /** @format */
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setParents } from "../../redux/parentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "./AddParent.css"; // Assuming you have some styles for the form
 import { handleAddParent } from "../../services/Api/handlePostApiFunctions";
 
 const ParentForm = () => {
+  const parents = useSelector((state) => state.parents.parents || []);
   const genders = [
     { ID: "1", Name: "Male" },
     { ID: "2", Name: "Female" },
@@ -50,7 +51,7 @@ const ParentForm = () => {
         ParentPhoneNo: res.ParentPhoneNo,
         Address: res.Address,
       };
-      dispatch(setParents(parentPayload));
+      dispatch(setParents([...parents, parentPayload]));
       toast.success("Parent added successfully!", {
         position: "top-right",
         autoClose: 3000,

@@ -34,19 +34,25 @@ const menuConfig = {
     },
     {
       title: "View Attendance",
-      links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
+      links: [
+        { label: "View Attendance", path: "/dashboard/teacher/attendance" },
+      ],
     },
   ],
   student: [
     {
       title: "View Attendance",
-      links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
+      links: [
+        { label: "View Attendance", path: "/dashboard/student/attendance" },
+      ],
     },
   ],
   parent: [
     {
       title: "View Attendance",
-      links: [{ label: "View Attendance", path: "/dashboard/attendance/view" }],
+      links: [
+        { label: "View Attendance", path: "/dashboard/parent/attendance" },
+      ],
     },
   ],
 };

@@ -25,7 +25,8 @@ const handleAddStudent = (req, res) => {
     Address,
   } = req.body;
 
-  // Validation
+  const StdImages = req.file ? req.file.filename : null;
+
   if (
     !Std_Name ||
     !Std_Email ||
@@ -44,14 +45,11 @@ const handleAddStudent = (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  // Step 1: Check if student already exists
   db.query(
     "SELECT * FROM Std_Table WHERE Std_Email = ? OR Std_B_Form = ? OR RollNo = ?",
     [Std_Email, Std_B_Form, RollNo],
     (err, results) => {
-      if (err) {
-        return res.status(500).json({ error: "Database error" });
-      }
+      if (err) return res.status(500).json({ error: "Database error" });
 
       if (results.length > 0) {
         return res.status(400).json({
@@ -59,18 +57,15 @@ const handleAddStudent = (req, res) => {
         });
       }
 
-      // Step 2: Hash the password
       bcrypt.hash(Password, 10, (hashErr, hashPassword) => {
-        if (hashErr) {
+        if (hashErr)
           return res.status(500).json({ error: "Password hashing failed" });
-        }
 
-        // Step 3: Insert student directly using provided ClassID
         db.query(
           `INSERT INTO Std_Table (
             Std_Name, Std_Email, Std_B_Form, Std_DOB, Batch, Session, RollNo,
-             Password,  Status, ClassID, Religion,ParentID, Gender, Address
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            Password, Status, ClassID, Religion, ParentID, Gender, Address, StdImages
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             Std_Name,
             Std_Email,
@@ -86,6 +81,7 @@ const handleAddStudent = (req, res) => {
             ParentID,
             Gender,
             Address,
+            StdImages, // Save filename
           ],
           (insertErr, result) => {
             if (insertErr) {
@@ -93,6 +89,7 @@ const handleAddStudent = (req, res) => {
                 .status(500)
                 .json({ error: "Adding Student failed", errMsg: insertErr });
             }
+
             return res.status(201).json({
               message: "Student added successfully",
               student: {
@@ -104,6 +101,7 @@ const handleAddStudent = (req, res) => {
                 ClassID: Number(ClassID),
                 Gender,
                 ParentID,
+                StdImages, // Include the saved image filename
               },
             });
           }
@@ -116,7 +114,7 @@ const handleAddStudent = (req, res) => {
 // ✅ Login student
 const handleStudentLogin = (req, res) => {
   const { Email, Password } = req.body;
-
+  console.log("Login attempt with Email:", req.body);
   db.query(
     "SELECT * FROM Std_Table WHERE Std_Email = ?",
     [Email],

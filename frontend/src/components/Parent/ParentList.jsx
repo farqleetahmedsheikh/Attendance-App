@@ -15,8 +15,10 @@ const ParentList = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedParent, setSelectedParent] = useState(null); // Use parent-related state
   const [formData, setFormData] = useState({});
-  const parentsData = useSelector((state) => state.parents || {});
-  const parents = parentsData.parents || [];
+  const parents = useSelector((state) => state.parents.parents || []);
+  // console.log("Parents Data:", parentsData); Debugging line to check the data structure
+  // const  = parentsData.parents || [];
+  console.log("Parents List:", parents); // Debugging line to check the list
 
   if (!Array.isArray(parents)) {
     return <p className="error">Error: Invalid parent data format.</p>;

@@ -19,18 +19,11 @@ const StudentForm = () => {
     { ID: "2", Name: "Evening" },
   ];
   const dispatch = useDispatch();
-  const classes = useSelector((state) => state.classes); // ✅ from Redux store
+  const classes = useSelector((state) => state.classes);
   const students = useSelector((state) => state.students.students);
   const parents = useSelector((state) => state.parents.parents || []);
-  const [parentOptions, setParentOptions] = useState([]);
-  useEffect(() => {
-    const parentOpts = parents.map((p) => ({
-      value: p.ParentID,
-      label: p.ParentName,
-    }));
-    setParentOptions(parentOpts);
-  }, [parents]); // rerun only if parents or teachers change
 
+  const [parentOptions, setParentOptions] = useState([]);
   const [formData, setFormData] = useState({
     Std_Name: "",
     Std_Email: "",
@@ -43,13 +36,22 @@ const StudentForm = () => {
     Password: "",
     Type: "",
     Status: "Inactive",
-    StdImages: "",
+    Std_Image: null,
     ClassID: "",
     Religion: "",
     Gender: "",
     Address: "",
     GuardianName: "",
+    ParentID: "",
   });
+
+  useEffect(() => {
+    const parentOpts = parents.map((p) => ({
+      value: p.ParentID,
+      label: p.ParentName,
+    }));
+    setParentOptions(parentOpts);
+  }, [parents]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,27 +64,24 @@ const StudentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = handleAddStudent(formData);
+      const formDataToSend = new FormData();
 
-      if (!res.ok) {
-        throw new Error("Failed to add student");
+      for (const key in formData) {
+        if (formData[key] !== null && formData[key] !== undefined) {
+          formDataToSend.append(key, formData[key]);
+        }
       }
 
-      const savedStudent = await res.json();
-      const savedStudentData = savedStudent.student;
-      dispatch(setStudents([...students, savedStudentData])); // ✅ Add to store without refetching
+      const { ok, data: responseData } = await handleAddStudent(formDataToSend);
 
-      toast.success("Student added successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
+      if (!ok) {
+        throw new Error(responseData?.error || "Failed to add student");
+      }
 
-      // Reset the form
+      dispatch(setStudents([...students, responseData.student]));
+
+      toast.success("Student added successfully!");
+
       setFormData({
         Std_Name: "",
         Std_Email: "",
@@ -95,30 +94,22 @@ const StudentForm = () => {
         Password: "",
         Type: "",
         Status: "Inactive",
-        StdImages: "",
+        Std_Image: null,
         ClassID: "",
         Religion: "",
         Gender: "",
         Address: "",
         GuardianName: "",
+        ParentID: "",
       });
     } catch (err) {
-      console.log(err);
-      toast.error("Failed to add student!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
+      console.error(err);
+      toast.error(err);
     }
   };
 
   return (
     <>
-      {" "}
       <ToastContainer />
       <form className="student-form" onSubmit={handleSubmit}>
         <input
@@ -155,6 +146,7 @@ const StudentForm = () => {
           onChange={handleChange}
           placeholder="Batch"
         />
+
         <select
           name="Session"
           value={formData.Session}
@@ -168,6 +160,7 @@ const StudentForm = () => {
             </option>
           ))}
         </select>
+
         <input
           name="RollNo"
           value={formData.RollNo}
@@ -181,6 +174,7 @@ const StudentForm = () => {
           onChange={handleChange}
           placeholder="Password"
         />
+
         <select
           name="ClassID"
           value={formData.ClassID}
@@ -205,6 +199,7 @@ const StudentForm = () => {
           onChange={handleChange}
           placeholder="Religion"
         />
+
         <select
           name="Gender"
           value={formData.Gender}
@@ -218,6 +213,7 @@ const StudentForm = () => {
             </option>
           ))}
         </select>
+
         <Select
           options={parentOptions}
           value={
@@ -232,11 +228,25 @@ const StudentForm = () => {
           placeholder="Search Parent..."
           isSearchable
         />
+
         <input
           name="Address"
           value={formData.Address}
           onChange={handleChange}
           placeholder="Address"
+        />
+
+        {/* 📸 Image Upload */}
+        <input
+          type="file"
+          name="Std_Image"
+          accept="image/*"
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              Std_Image: e.target.files[0],
+            }))
+          }
         />
 
         <button type="submit">Add Student</button>

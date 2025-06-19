@@ -10,9 +10,10 @@ const {
   handleUpdateStudent,
 } = require("../controllers/students");
 const verifyAdmin = require("../middleware/auth"); // Import the auth middleware
+const upload = require("../middleware/multerConfig"); // Multer config
 const router = express.Router();
 
-router.post("/add", verifyAdmin, handleAddStudent);
+router.post("/add", verifyAdmin, upload.single("Std_Image"), handleAddStudent);
 
 router.post("/login", handleStudentLogin);
 

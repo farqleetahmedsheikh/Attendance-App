@@ -124,7 +124,7 @@ CREATE TABLE PTM_Table (
 CREATE TABLE AttendanceTable (
     AttendanceID INT PRIMARY KEY AUTO_INCREMENT,
     AttendanceDate DATE NOT NULL,
-    IsPresent BOOLEAN NOT NULL,
+    IsPresent VARCHAR(255) NOT NULL,
     StudentID INT NOT NULL,
     SubjectID INT NOT NULL,
     FOREIGN KEY (StudentID) REFERENCES Std_Table(Std_ID) ON DELETE CASCADE,

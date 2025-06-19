@@ -63,13 +63,14 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = handleAddTeacher(formData);
+      const res = await handleAddTeacher(formData);
+      console.log("Response from handleAddTeacher:", res);
       if (!res.ok) {
-        throw new Error("Failed to add teacher");
+        throw new Error(res.data?.error || "Failed to add teacher");
       }
 
-      const savedTeacher = await res.json();
-      dispatch(addTeacher(savedTeacher.teacher)); // add to redux store
+      console.log("Teacher added successfully:", res.data);
+      dispatch(addTeacher(res.data.teacher)); // assuming backend sends back teacher object
       toast.success("Teacher added successfully!", {
         position: "top-right",
         autoClose: 3000,

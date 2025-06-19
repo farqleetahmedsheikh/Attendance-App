@@ -12,21 +12,23 @@ const handleAddTeacher = async (formData) => {
     },
     body: JSON.stringify(formData),
   });
+
   const data = await res.json();
-  return data;
+  return { ok: res.ok, status: res.status, data };
 };
 
 const handleAddStudent = async (formData) => {
   const res = await fetch(`${BASE_URL}/student/add`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`, // DO NOT set Content-Type manually for FormData
     },
-    body: JSON.stringify(formData),
+    body: formData,
   });
+
   const data = await res.json();
-  return data;
+
+  return { ok: res.ok, status: res.status, data };
 };
 
 const handleAddClass = async (formData) => {
@@ -82,8 +84,8 @@ const handleAddSubject = async (formData) => {
   return data;
 };
 export {
-  handleAddTeacher,
   handleAddStudent,
+  handleAddTeacher,
   handleAddClass,
   handleAddParent,
   handleAddPTM,

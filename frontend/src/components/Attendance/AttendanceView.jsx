@@ -23,6 +23,8 @@ const AttendanceView = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [filteredClasses, setFilteredClasses] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [error, setError] = useState("");
 
   // For parent role: filter students by parentId
   useEffect(() => {
@@ -135,10 +137,24 @@ const AttendanceView = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit logic goes here
-    console.log("Filters submitted:", filters);
+    setError("");
+    try {
+      const res = await fetch("/api/attendance/get", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filters),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch attendance");
+
+      setAttendanceData(data.attendance);
+    } catch (err) {
+      setError(err.message);
+      setAttendanceData([]);
+    }
   };
 
   return (
@@ -233,6 +249,35 @@ const AttendanceView = () => {
           View Attendance
         </button>
       </form>
+
+      {error && <p className="error-msg">{error}</p>}
+
+      {attendanceData.length > 0 && (
+        <table className="attendance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Student Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {attendanceData.map((record, idx) => (
+              <tr key={idx}>
+                <td>{record.AttendanceDate.slice(0, 10)}</td>
+                <td>{record.Std_Name}</td>
+                <td>{record.IsPresent}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {attendanceData.length === 0 && !error && (
+        <p className="info-msg">
+          No attendance data found for selected Student.
+        </p>
+      )}
     </div>
   );
 };
