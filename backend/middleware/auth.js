@@ -1,5 +1,3 @@
-/** @format */
-
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY || "your-secret-key";
@@ -10,6 +8,7 @@ const verifyAdmin = (req, res, next) => {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized: Token missing" });
   }
+
   const token = authHeader.split(" ")[1];
 
   try {
@@ -19,10 +18,18 @@ const verifyAdmin = (req, res, next) => {
       return res.status(403).json({ error: "Forbidden: Not an admin" });
     }
 
-    req.user = decoded; // You can access userId and role later
+    req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Unauthorized: Invalid token", err });
+    console.error("Token verification failed:", err);
+
+    if (err.name === "TokenExpiredError") {
+      console.error("Token expired:", err);
+      return res.status(401).json({ error: "Token expired" });
+    }
+    console.error("Invalid token:", err);
+
+    return res.status(401).json({ error: "Unauthorized: Invalid token" });
   }
 };
 

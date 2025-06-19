@@ -76,10 +76,15 @@ const handleAdminLogin = async (req, res) => {
           { userId: admin.AdminID, role: "admin" },
           SECRET_KEY,
           {
-            expiresIn: "5h",
+            expiresIn: "1h",
           }
         );
-        return res.json({ message: "Login successful", token, role: "admin" });
+        return res.json({
+          message: "Login successful",
+          token,
+          role: "admin",
+          userId: admin.AdminID,
+        });
       } else {
         return res.status(401).json({ error: "Invalid credentials" });
       }

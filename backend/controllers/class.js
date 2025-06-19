@@ -5,6 +5,7 @@ const db = require("../connection");
 // add class
 const handleAddClass = (req, res) => {
   const { ClassName } = req.body;
+  console.log("Adding class:", ClassName);
 
   db.query(
     "SELECT * FROM ClassTable WHERE ClassName = ?",

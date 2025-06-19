@@ -20,15 +20,14 @@ const ClassForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = handleAddClass(formData);
-      if (!res.ok) throw new Error("Failed to add class");
-      const data = await res.json();
-      console.log("Class added:", data);
+      const { ok, data: responseData } = await handleAddClass(formData);
+      if (!ok) throw new Error("Failed to add class");
+      console.log("Class added:", responseData);
 
       // Normalize the ID field (adjust based on your backend response)
       const newClass = {
-        ClassName: data.ClassName,
-        ClassID: data.ClassID || data._id || data.ID,
+        ClassName: responseData.ClassName,
+        ClassID: responseData.ClassID || responseData._id || responseData.ID,
       };
 
       dispatch(addClass(newClass));
@@ -43,6 +42,7 @@ const ClassForm = () => {
       });
       setFormData({ ClassName: "", Section: "" });
     } catch (error) {
+      console.error("Error adding class:", error);
       toast.error("Something went wrong while adding the class.", {
         position: "top-right",
         autoClose: 3000,

@@ -1,6 +1,7 @@
 /** @format */
 
 const token = localStorage.getItem("token");
+console.log("Token:", token); // Debugging line to check if token is retrieved
 const BASE_URL = "http://localhost:4000/api";
 
 const handleAddTeacher = async (formData) => {
@@ -40,8 +41,9 @@ const handleAddClass = async (formData) => {
     },
     body: JSON.stringify(formData),
   });
-  const data = await res.json();
-  return data;
+    const data = await res.json();
+
+  return { ok: res.ok, status: res.status, data };
 };
 
 const handleAddParent = async (formData) => {
@@ -67,7 +69,7 @@ const handleAddPTM = async (formData) => {
     body: JSON.stringify(formData),
   });
   const data = await res.json();
-  return data;
+ return { ok: res.ok, status: res.status, data };
 };
 
 const handleAddSubject = async (formData) => {

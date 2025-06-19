@@ -36,6 +36,8 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove JWT token
+    localStorage.removeItem("role"); // Remove role
+    localStorage.removeItem("userId"); // Remove userId
     navigate("/"); // Redirect to login
   };
 

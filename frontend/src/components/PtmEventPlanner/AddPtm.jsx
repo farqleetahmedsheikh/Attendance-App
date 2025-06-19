@@ -44,17 +44,16 @@ const AddPTM = () => {
     };
 
     try {
-      const res = handleAddPTM(payload);
-      if (!res.ok) throw new Error("Failed to add PTM");
+      const { ok, data: responseData } = await handleAddPTM(payload);
+      if (!ok) throw new Error("Failed to add PTM");
 
-      const data = await res.json();
       const payloadData = {
-        PTMID: data.ptm.PTMID,
-        PTMDate: data.ptm.PTMDate,
-        PTMTime: data.ptm.PTMTime,
-        Description: data.ptm.Description,
-        ParentID: data.ptm.ParentID,
-        TeacherID: data.ptm.TeacherID,
+        PTMID: responseData.ptm.PTMID,
+        PTMDate: responseData.ptm.PTMDate,
+        PTMTime: responseData.ptm.PTMTime,
+        Description: responseData.ptm.Description,
+        ParentID: responseData.ptm.ParentID,
+        TeacherID: responseData.ptm.TeacherID,
       };
       dispatch(addPTM(payloadData));
       toast.success("PTM added successfully!", {
@@ -75,6 +74,7 @@ const AddPTM = () => {
         TeacherID: null,
       });
     } catch (err) {
+      console.error("Error adding PTM:", err);
       toast.error("PTM adding failed!", {
         position: "top-right",
         autoClose: 3000,
