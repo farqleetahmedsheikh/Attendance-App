@@ -26,6 +26,10 @@ const menuConfig = {
       title: "PTM",
       links: [{ label: "Manage PTM", path: "/dashboard/ptm/manage" }],
     },
+    {
+      title: "Queries",
+      links: [{ label: "Manage Queries", path: "/dashboard/query/manage" }],
+    },
   ],
   teacher: [
     {
@@ -46,6 +50,10 @@ const menuConfig = {
         { label: "View Attendance", path: "/dashboard/student/attendance" },
       ],
     },
+    {
+      title: "Submit Query",
+      links: [{ label: "Submit Query", path: "/dashboard/student/query" }],
+    },
   ],
   parent: [
     {
@@ -53,6 +61,10 @@ const menuConfig = {
       links: [
         { label: "View Attendance", path: "/dashboard/parent/attendance" },
       ],
+    },
+    {
+      title: "Submit Query",
+      links: [{ label: "Submit Query", path: "/dashboard/parent/query" }],
     },
   ],
 };

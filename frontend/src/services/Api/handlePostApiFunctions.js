@@ -41,7 +41,7 @@ const handleAddClass = async (formData) => {
     },
     body: JSON.stringify(formData),
   });
-    const data = await res.json();
+  const data = await res.json();
 
   return { ok: res.ok, status: res.status, data };
 };
@@ -69,7 +69,7 @@ const handleAddPTM = async (formData) => {
     body: JSON.stringify(formData),
   });
   const data = await res.json();
- return { ok: res.ok, status: res.status, data };
+  return { ok: res.ok, status: res.status, data };
 };
 
 const handleAddSubject = async (formData) => {
@@ -82,8 +82,37 @@ const handleAddSubject = async (formData) => {
     body: JSON.stringify(formData),
   });
   const data = await res.json();
-  console.log(data);
   return data;
+};
+
+const handleAddQuery = async (formData) => {
+  const res = await fetch(`${BASE_URL}/query/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(formData),
+  });
+  const data = await res.json();
+  return { ok: res.ok, status: res.status, data };
+};
+
+const handlePutRead = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/query/mark-read`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to mark queries as read");
+    return await res.json(); // optional: return message
+  } catch (error) {
+    console.error("Error marking queries as read:", error);
+  }
 };
 export {
   handleAddStudent,
@@ -92,4 +121,6 @@ export {
   handleAddParent,
   handleAddPTM,
   handleAddSubject,
+  handleAddQuery,
+  handlePutRead,
 };

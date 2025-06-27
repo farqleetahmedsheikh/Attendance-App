@@ -1,6 +1,4 @@
 /** @format */
-
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
@@ -27,7 +25,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="main-container">
       <h1>Welcome to the Portal</h1>
       <h3>Manage your everything through a single portal</h3>
       <div className="card-wrapper">

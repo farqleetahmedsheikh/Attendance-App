@@ -1,9 +1,6 @@
 /** @format */
 
 const db = require("../connection");
-const jwt = require("jsonwebtoken");
-
-const SECRET_KEY = process.env.JWT_SECRET || "secretkey";
 
 // Add PTM
 const handleAddPTM = (req, res) => {

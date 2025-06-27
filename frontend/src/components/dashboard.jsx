@@ -1,5 +1,3 @@
-/** @format */
-
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -10,15 +8,18 @@ import {
   fetchStudents,
   fetchSubjects,
   fetchTeachers,
+  handleGetUnreadCount,
 } from "../services/Api/handleGetApiFunctions";
 import "./dashboard.css";
-import { getMenuLinks } from "../services/Options/menu"; // Import the menu configuration
+import { getMenuLinks } from "../services/Options/menu"; // Import menu config
 
 const AdminDashboard = () => {
   const [openDropdown, setOpenDropdown] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const role = localStorage.getItem("role") || "admin"; // default to admin if missing
+
+  const role = localStorage.getItem("role") || "admin";
   const menuList = getMenuLinks(role) || [];
 
   useEffect(() => {
@@ -28,6 +29,13 @@ const AdminDashboard = () => {
     fetchTeachers(dispatch);
     fetchClasses(dispatch);
     fetchStudents(dispatch);
+
+    const fetchUnread = async () => {
+      const count = await handleGetUnreadCount();
+      setUnreadCount(count || 0);
+    };
+
+    fetchUnread();
   }, [dispatch]);
 
   const toggleDropdown = (section) => {
@@ -35,10 +43,10 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove JWT token
-    localStorage.removeItem("role"); // Remove role
-    localStorage.removeItem("userId"); // Remove userId
-    navigate("/"); // Redirect to login
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    navigate("/");
   };
 
   return (
@@ -54,7 +62,11 @@ const AdminDashboard = () => {
                 className="dropdown-title"
                 onClick={() => toggleDropdown(section.title)}
               >
-                {section.title} ▾
+                {section.title}
+                {section.title === "Queries" && unreadCount > 0 && (
+                  <span className="unread-badge">{unreadCount}</span>
+                )}
+                ▾
               </div>
               <div
                 className={`dropdown-links ${
@@ -71,7 +83,6 @@ const AdminDashboard = () => {
           ))}
         </ul>
 
-        {/* 🔒 Logout Button */}
         <button className="logout-button" onClick={handleLogout}>
           Logout
         </button>

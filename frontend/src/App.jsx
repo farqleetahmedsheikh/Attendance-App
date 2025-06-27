@@ -2,6 +2,8 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
+import Home from "./components/Home";
+import Contact from "./components/Contact";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import AdminDashboard from "./components/dashboard";
@@ -13,12 +15,16 @@ import Parent from "./components/Parent/Parent";
 import PTM from "./components/PtmEventPlanner/PtmPlanner";
 import AttendanceView from "./components/Attendance/AttendanceView";
 import AttendanceMark from "./components/Attendance/AttendanceMark";
+import AddQuery from "./components/Query/AddQuery";
+import QueryList from "./components/Query/QueryList";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Home />} />
+         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<HomePage />} />
         <Route path="/login/admin" element={<Login role="admin" />} />
         <Route path="/login/teacher" element={<Login role="teacher" />} />
         <Route path="/login/student" element={<Login role="student" />} />
@@ -32,10 +38,12 @@ function App() {
           <Route path="subject/manage" element={<Subject />} />
           <Route path="parent/manage" element={<Parent />} />
           <Route path="ptm/manage" element={<PTM />} />
+          <Route path="query/manage" element={<QueryList />} />
           <Route
             path="student/attendance"
             element={<AttendanceView role="student" />}
           />
+          <Route path="student/query" element={<AddQuery role="student" />} />
           <Route
             path="parent/attendance"
             element={<AttendanceView role="parent" />}

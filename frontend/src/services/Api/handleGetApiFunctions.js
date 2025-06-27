@@ -105,6 +105,41 @@ const fetchPTMs = async (dispatch) => {
   }
 };
 
+const handleGetQueries = async () => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await fetch(`${BASE_URL}/query/queries`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch queries");
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching queries:", error);
+  }
+};
+
+const handleGetUnreadCount = async () => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await fetch(`${BASE_URL}/query/unread-count`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch unread count");
+
+    const data = await res.json();
+    return data.unreadCount;
+  } catch (error) {
+    console.error("Error fetching unread count:", error);
+  }
+};
+
 export {
   fetchClasses,
   fetchStudents,
@@ -112,4 +147,6 @@ export {
   fetchTeachers,
   fetchParents,
   fetchPTMs,
+  handleGetQueries,
+  handleGetUnreadCount,
 };

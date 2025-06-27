@@ -1,0 +1,115 @@
+.query-list {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.query-list h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.query-badge {
+  background-color: red;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+.query-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.query-table th,
+.query-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.query-table th {
+  background-color: #0077cc;
+  color: white;
+  font-weight: 600;
+}
+
+.query-table tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.query-table td {
+  color: #555;
+}
+
+.unread-row {
+  background-color: #fff3cd;
+  font-weight: bold;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .query-table {
+    font-size: 0.85rem;
+  }
+
+  .query-table th,
+  .query-table td {
+    padding: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .query-list {
+    padding: 1rem;
+  }
+
+  .query-list h3 {
+    font-size: 1.4rem;
+  }
+
+  .query-table,
+  .query-table thead,
+  .query-table tbody,
+  .query-table th,
+  .query-table td,
+  .query-table tr {
+    display: block;
+  }
+
+  .query-table tr {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .query-table td {
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .query-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .query-table th {
+    display: none;
+  }
+}
