@@ -1,8 +1,8 @@
--- Create and select the database
+-- 1. Create and select the database
 CREATE DATABASE IF NOT EXISTS attandence_app;
 USE attandence_app;
 
--- Admin Table
+-- 2. Admin Table
 CREATE TABLE AdminTable (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(100),
@@ -12,13 +12,13 @@ CREATE TABLE AdminTable (
     PhoneNo VARCHAR(20)
 );
 
--- Class Table
+-- 3. Class Table
 CREATE TABLE ClassTable (
     ClassID INT PRIMARY KEY AUTO_INCREMENT,
     ClassName VARCHAR(100)
 );
 
--- Subject Table
+-- 4. Subject Table
 CREATE TABLE SubjectTable (
     SubjectID INT PRIMARY KEY AUTO_INCREMENT,
     SubjectName VARCHAR(100),
@@ -27,7 +27,7 @@ CREATE TABLE SubjectTable (
     FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE CASCADE
 );
 
--- Teacher Table
+-- 5. Teacher Table
 CREATE TABLE TeacherTable (
     TeacherID INT PRIMARY KEY AUTO_INCREMENT,
     TeacherName VARCHAR(100),
@@ -44,7 +44,7 @@ CREATE TABLE TeacherTable (
     Address TEXT
 );
 
--- Teacher Subject Table
+-- 6. Teacher-Subject Linking Table
 CREATE TABLE TeacherSubjectTable (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     TeacherID INT,
@@ -53,7 +53,7 @@ CREATE TABLE TeacherSubjectTable (
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID) ON DELETE CASCADE
 );
 
--- Class Detail Table
+-- 7. Class Detail Table
 CREATE TABLE ClassDetailTable (
     ClassDetailID INT PRIMARY KEY AUTO_INCREMENT,
     ClassID INT,
@@ -62,7 +62,7 @@ CREATE TABLE ClassDetailTable (
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID)
 );
 
--- Teacher Detail Table
+-- 8. Teacher Detail Table
 CREATE TABLE TeacherDetail (
     TeacherDetailID INT PRIMARY KEY AUTO_INCREMENT,
     TeacherID INT,
@@ -71,7 +71,20 @@ CREATE TABLE TeacherDetail (
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID)
 );
 
--- Student Table
+-- 9. Parent Table
+CREATE TABLE ParentTable (
+    ParentID INT PRIMARY KEY AUTO_INCREMENT,
+    ParentName VARCHAR(100),
+    ParentEmail VARCHAR(100),
+    Password VARCHAR(100),
+    ParentPhoneNo VARCHAR(20),
+    ParentCNIC VARCHAR(20),
+    Religion VARCHAR(50),
+    Gender VARCHAR(20),
+    Address TEXT
+);
+
+-- 10. Student Table
 CREATE TABLE Std_Table (
     Std_ID INT PRIMARY KEY AUTO_INCREMENT,
     Std_Name VARCHAR(100),
@@ -89,27 +102,16 @@ CREATE TABLE Std_Table (
     Registration_Time TIME DEFAULT CURRENT_TIME,
     StdImages VARCHAR(255),
     ClassID INT,
+    ParentID INT,
     Religion VARCHAR(50),
     Gender VARCHAR(20),
     Address TEXT,
     GuardianName VARCHAR(100),
-    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE SET NULL
+    FOREIGN KEY (ClassID) REFERENCES ClassTable(ClassID) ON DELETE SET NULL,
+    FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
--- Parent Table
-CREATE TABLE ParentTable (
-    ParentID INT PRIMARY KEY AUTO_INCREMENT,
-    ParentName VARCHAR(100),
-    ParentEmail VARCHAR(100),
-    Password VARCHAR(100),
-    ParentPhoneNo VARCHAR(20),
-    ParentCNIC VARCHAR(20),
-    Religion VARCHAR(50),
-    Gender VARCHAR(20),
-    Address TEXT
-);
-
--- PTM Table
+-- 11. Parent-Teacher Meeting (PTM) Table
 CREATE TABLE PTM_Table (
     PTMID INT PRIMARY KEY AUTO_INCREMENT,
     PTMDate DATE NOT NULL,
@@ -121,6 +123,7 @@ CREATE TABLE PTM_Table (
     FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID) ON DELETE CASCADE
 );
 
+-- 12. Attendance Table
 CREATE TABLE AttendanceTable (
     AttendanceID INT PRIMARY KEY AUTO_INCREMENT,
     AttendanceDate DATE NOT NULL,
@@ -129,36 +132,21 @@ CREATE TABLE AttendanceTable (
     SubjectID INT NOT NULL,
     FOREIGN KEY (StudentID) REFERENCES Std_Table(Std_ID) ON DELETE CASCADE,
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID) ON DELETE CASCADE
-) ENGINE=InnoDB;
+);
 
-
-ALTER TABLE Std_Table
-ADD COLUMN ParentID INT AFTER ClassID,
-ADD CONSTRAINT fk_parent
-FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID)
-ON DELETE SET NULL
-ON UPDATE CASCADE;
-
-
+-- 13. Query Table (Conversation Threads)
 CREATE TABLE Queries (
     QueryID INT AUTO_INCREMENT PRIMARY KEY,
     Subject VARCHAR(255) NOT NULL,
     ParentID INT NOT NULL,
     TeacherID INT NOT NULL,
-    Status ENUM('Open', 'Closed') DEFAULT 'Open',
+    Status ENUM('Read', 'Unread') DEFAULT 'Unread',
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    -- Foreign key constraints
-    CONSTRAINT fk_queries_parent FOREIGN KEY (ParentID)
-        REFERENCES ParentTable(ParentID)
-        ON DELETE CASCADE,
-
-    CONSTRAINT fk_queries_teacher FOREIGN KEY (TeacherID)
-        REFERENCES TeacherTable(TeacherID)
-        ON DELETE CASCADE
+    FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID) ON DELETE CASCADE,
+    FOREIGN KEY (TeacherID) REFERENCES TeacherTable(TeacherID) ON DELETE CASCADE
 );
 
-
+-- 14. Query Message Table (Replies inside each thread)
 CREATE TABLE QueryMessages (
     MessageID INT AUTO_INCREMENT PRIMARY KEY,
     QueryID INT NOT NULL,
@@ -166,8 +154,5 @@ CREATE TABLE QueryMessages (
     SenderID INT NOT NULL,
     Message TEXT NOT NULL,
     SentAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_query_message_query FOREIGN KEY (QueryID)
-        REFERENCES Queries(QueryID)
-        ON DELETE CASCADE
+    FOREIGN KEY (QueryID) REFERENCES Queries(QueryID) ON DELETE NULL
 );

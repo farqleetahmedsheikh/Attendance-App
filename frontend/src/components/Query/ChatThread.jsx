@@ -15,9 +15,15 @@ const ChatThread = ({ query }) => {
 
   const fetchReplies = async () => {
     console.log("Fetching replies for query ID:", queryId);
-    const result = await handleAddReply(Number(queryId));
-    console.log("Fetched replies:", result);
-    if (result) setReplies(result);
+    const { ok, data } = await handleGetQueryThread(Number(queryId)); // ✅ CORRECT FUNCTION
+
+    console.log("Fetched replies:", data);
+
+    if (ok && Array.isArray(data)) {
+      setReplies(data);
+    } else {
+      console.error("Failed to fetch replies", data);
+    }
   };
 
   useEffect(() => {
@@ -34,19 +40,33 @@ const ChatThread = ({ query }) => {
   }, [query.QueryID]);
 
   const sendReply = async () => {
-    if (!newMessage.trim()) return;
+    const trimmedMessage = newMessage.trim();
+    if (!trimmedMessage) return;
+
+    const userId = parseInt(localStorage.getItem("userId"), 10);
+    if (!userId || isNaN(userId)) {
+      console.error("Invalid or missing userId in localStorage");
+      return;
+    }
 
     const payload = {
       QueryID: queryId,
-      SenderID: parseInt(localStorage.getItem("userId") || 0),
+      SenderID: userId,
       SenderRole: role,
-      Message: newMessage,
+      Message: trimmedMessage,
     };
 
-    const { ok } = await handleAddReply(payload);
-    if (ok) {
-      setNewMessage("");
-      fetchReplies();
+    try {
+      const { ok, data } = await handleAddReply(payload);
+
+      if (ok) {
+        setNewMessage("");
+        fetchReplies(); // Refresh thread
+      } else {
+        console.error("Reply failed:", data?.error || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Error sending reply:", error);
     }
   };
 

@@ -34,6 +34,7 @@ app.use(
 // Middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Serve uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
