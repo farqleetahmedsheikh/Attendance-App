@@ -15,7 +15,7 @@ import Parent from "./components/Parent/Parent";
 import PTM from "./components/PtmEventPlanner/PtmPlanner";
 import AttendanceView from "./components/Attendance/AttendanceView";
 import AttendanceMark from "./components/Attendance/AttendanceMark";
-import AddQuery from "./components/Query/AddQuery";
+import Query from "./components/Query/Query";
 import QueryList from "./components/Query/QueryList";
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-         <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<HomePage />} />
         <Route path="/login/admin" element={<Login role="admin" />} />
         <Route path="/login/teacher" element={<Login role="teacher" />} />
@@ -43,11 +43,12 @@ function App() {
             path="student/attendance"
             element={<AttendanceView role="student" />}
           />
-          <Route path="student/query" element={<AddQuery role="student" />} />
+          <Route path="parent/query" element={<Query />} />
           <Route
             path="parent/attendance"
             element={<AttendanceView role="parent" />}
           />
+          <Route path="teacher/query" element={<Query />} />
           <Route
             path="teacher/attendance"
             element={<AttendanceView role="teacher" />}

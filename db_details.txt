@@ -138,3 +138,36 @@ ADD CONSTRAINT fk_parent
 FOREIGN KEY (ParentID) REFERENCES ParentTable(ParentID)
 ON DELETE SET NULL
 ON UPDATE CASCADE;
+
+
+CREATE TABLE Queries (
+    QueryID INT AUTO_INCREMENT PRIMARY KEY,
+    Subject VARCHAR(255) NOT NULL,
+    ParentID INT NOT NULL,
+    TeacherID INT NOT NULL,
+    Status ENUM('Open', 'Closed') DEFAULT 'Open',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Foreign key constraints
+    CONSTRAINT fk_queries_parent FOREIGN KEY (ParentID)
+        REFERENCES ParentTable(ParentID)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_queries_teacher FOREIGN KEY (TeacherID)
+        REFERENCES TeacherTable(TeacherID)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE QueryMessages (
+    MessageID INT AUTO_INCREMENT PRIMARY KEY,
+    QueryID INT NOT NULL,
+    SenderRole ENUM('Parent', 'Teacher') NOT NULL,
+    SenderID INT NOT NULL,
+    Message TEXT NOT NULL,
+    SentAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_query_message_query FOREIGN KEY (QueryID)
+        REFERENCES Queries(QueryID)
+        ON DELETE CASCADE
+);

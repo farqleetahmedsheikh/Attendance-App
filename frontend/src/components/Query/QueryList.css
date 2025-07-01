@@ -113,3 +113,20 @@
     display: none;
   }
 }
+
+.chat-bubble {
+  max-width: 70%;
+  margin: 8px;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.parent {
+  background-color: #d0f0ff;
+  align-self: flex-start;
+}
+
+.teacher {
+  background-color: #ffe0cc;
+  align-self: flex-end;
+}

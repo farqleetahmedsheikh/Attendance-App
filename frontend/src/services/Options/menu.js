@@ -42,6 +42,10 @@ const menuConfig = {
         { label: "View Attendance", path: "/dashboard/teacher/attendance" },
       ],
     },
+    {
+      title: "Query",
+      links: [{ label: "Query", path: "/dashboard/teacher/query" }],
+    },
   ],
   student: [
     {
@@ -49,10 +53,6 @@ const menuConfig = {
       links: [
         { label: "View Attendance", path: "/dashboard/student/attendance" },
       ],
-    },
-    {
-      title: "Submit Query",
-      links: [{ label: "Submit Query", path: "/dashboard/student/query" }],
     },
   ],
   parent: [
@@ -63,8 +63,8 @@ const menuConfig = {
       ],
     },
     {
-      title: "Submit Query",
-      links: [{ label: "Submit Query", path: "/dashboard/parent/query" }],
+      title: "Query",
+      links: [{ label: "Query", path: "/dashboard/parent/query" }],
     },
   ],
 };

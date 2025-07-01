@@ -1,14 +1,21 @@
 /** @format */
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
 import "./AddQuery.css";
 import { handleAddQuery } from "../../services/Api/handlePostApiFunctions";
+import { useSelector } from "react-redux"; // Assuming teachers come from Redux
 
 const QueryForm = () => {
   const [formData, setFormData] = useState({
     Subject: "",
     Message: "",
+    TeacherID: null,
   });
+
+  const teachers = useSelector((state) => state.teachers.teachers || []); // ✅ Replace with actual teacher state path
+  const role = localStorage.getItem("role");
+  const userID = parseInt(localStorage.getItem("userId") || 0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,20 +25,27 @@ const QueryForm = () => {
     }));
   };
 
+  const handleSelectTeacher = (selectedOption) => {
+    setFormData((prev) => ({
+      ...prev,
+      TeacherID: selectedOption?.value || null,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔍 Get role from localStorage (assume it's saved as "userRole")
-    const role = localStorage.getItem("role"); // e.g., "Parent" or "Student"
+    if (!formData.TeacherID) {
+      toast.error("Please select a teacher!");
+      return;
+    }
 
-    const userID = localStorage.getItem("userId") || 0;
-
-    // 🔧 Prepare payload based on role
     const payload = {
       Subject: formData.Subject,
       Message: formData.Message,
       role,
-      UserID: parseInt(userID),
+      UserID: userID,
+      TeacherID: formData.TeacherID,
     };
 
     try {
@@ -39,21 +53,20 @@ const QueryForm = () => {
       if (!ok || ok.error) {
         throw new Error(responseData?.error || "Query submission failed");
       }
-      toast.success("Query submitted successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "light",
-      });
-      setFormData({ Subject: "", Message: "" });
+
+      toast.success("Query submitted successfully!");
+      setFormData({ Subject: "", Message: "", TeacherID: null });
     } catch (err) {
       console.error("Query submission error:", err);
-      toast.error("Failed to submit query!", {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "light",
-      });
+      toast.error("Failed to submit query!");
     }
   };
+
+  // Format teacher options for react-select
+  const teacherOptions = teachers.map((teacher) => ({
+    value: teacher.TeacherID, // Replace with your real teacher field
+    label: teacher.TeacherName,
+  }));
 
   return (
     <>
@@ -66,6 +79,15 @@ const QueryForm = () => {
           placeholder="Subject"
           required
         />
+
+        <Select
+          options={teacherOptions}
+          value={teacherOptions.find((opt) => opt.value === formData.TeacherID)}
+          onChange={handleSelectTeacher}
+          placeholder="Search and select teacher"
+          isSearchable
+        />
+
         <textarea
           name="Message"
           value={formData.Message}
@@ -74,6 +96,7 @@ const QueryForm = () => {
           rows="5"
           required
         />
+
         <button type="submit">Submit Query</button>
       </form>
     </>

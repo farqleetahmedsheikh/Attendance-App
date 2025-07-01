@@ -1,22 +1,24 @@
+/** @format */
+
 // controllers/queryController.js
 const db = require("../connection");
 
+// --- QUERY SUBMISSION ---
 const submitQuery = (req, res) => {
-  const { Subject, Message, role, UserID } = req.body;
+  const { Subject, Message, role, UserID, TeacherID } = req.body;
 
-  if (!Subject || !Message || !role) {
+  if (!Subject || !Message || !role || !UserID || !TeacherID) {
     return res.status(400).json({ error: "All fields are required." });
   }
 
-  // Prepare insert values
   const parentId = role === "parent" ? UserID : null;
-  const studentId = role === "student" ? UserID : null;
+
   const query = `
-    INSERT INTO Queries (Subject, Message, ParentID, StudentID)
+    INSERT INTO Queries (Subject, Message, ParentID, TeacherID)
     VALUES (?, ?, ?, ?)
   `;
 
-  db.query(query, [Subject, Message, parentId, studentId], (err, result) => {
+  db.query(query, [Subject, Message, parentId, TeacherID], (err, result) => {
     if (err) {
       console.error("Database insert error:", err);
       return res.status(500).json({ error: "Database error." });
@@ -29,6 +31,7 @@ const submitQuery = (req, res) => {
   });
 };
 
+// --- GET ALL QUERIES ---
 const getAllQueries = (req, res) => {
   const query = `
     SELECT * FROM Queries
@@ -47,14 +50,11 @@ const getAllQueries = (req, res) => {
   });
 };
 
+// --- MARK ALL AS READ ---
 const markAllAsRead = (req, res) => {
-  const query = `
-    UPDATE Queries
-    SET Status = 'Read'
-    WHERE Status = 'Unread'
-  `;
+  const query = `UPDATE Queries SET Status = 'Read' WHERE Status = 'Unread'`;
 
-  db.query(query, (err, result) => {
+  db.query(query, (err) => {
     if (err) {
       console.error("Error marking queries as read:", err);
       return res.status(500).json({ error: "Failed to update status" });
@@ -66,10 +66,9 @@ const markAllAsRead = (req, res) => {
   });
 };
 
+// --- GET UNREAD COUNT ---
 const getUnreadCount = (req, res) => {
-  const query = `
-    SELECT COUNT(*) AS unreadCount FROM Queries WHERE Status = 'Unread'
-  `;
+  const query = `SELECT COUNT(*) AS unreadCount FROM Queries WHERE Status = 'Unread'`;
 
   db.query(query, (err, result) => {
     if (err) {
@@ -81,4 +80,55 @@ const getUnreadCount = (req, res) => {
   });
 };
 
-module.exports = { submitQuery, getAllQueries, markAllAsRead, getUnreadCount };
+// --- REPLY TO QUERY ---
+const submitReply = (req, res) => {
+  const { QueryID, SenderRole, SenderID, Message } = req.body;
+  console.log("Received reply data:", req.body);
+
+  if (!QueryID || !SenderRole || !SenderID || !Message) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  const query = `
+    INSERT INTO QueryReplies (QueryID, SenderRole, SenderID, Message)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  db.query(query, [QueryID, SenderRole, SenderID, Message], (err, result) => {
+    if (err) {
+      console.error("Error inserting reply:", err);
+      return res.status(500).json({ error: "Failed to submit reply" });
+    }
+
+    return res.status(200).json({ message: "Reply submitted successfully" });
+  });
+};
+
+// --- GET REPLIES FOR QUERY ---
+const getRepliesByQueryId = (req, res) => {
+  const { queryId } = req.params;
+
+  const query = `
+    SELECT * FROM QueryReplies
+    WHERE QueryID = ?
+    ORDER BY CreatedAt ASC
+  `;
+
+  db.query(query, [queryId], (err, results) => {
+    if (err) {
+      console.error("Error fetching replies:", err);
+      return res.status(500).json({ error: "Failed to fetch replies" });
+    }
+
+    return res.status(200).json(results);
+  });
+};
+
+module.exports = {
+  submitQuery,
+  getAllQueries,
+  markAllAsRead,
+  getUnreadCount,
+  submitReply,
+  getRepliesByQueryId,
+};
