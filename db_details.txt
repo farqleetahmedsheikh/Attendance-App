@@ -138,6 +138,7 @@ CREATE TABLE AttendanceTable (
 CREATE TABLE Queries (
     QueryID INT AUTO_INCREMENT PRIMARY KEY,
     Subject VARCHAR(255) NOT NULL,
+    Message VARCHAR(255) NOT NULL,
     ParentID INT NOT NULL,
     TeacherID INT NOT NULL,
     Status ENUM('Read', 'Unread') DEFAULT 'Unread',
@@ -153,6 +154,6 @@ CREATE TABLE QueryMessages (
     SenderRole ENUM('Parent', 'Teacher') NOT NULL,
     SenderID INT NOT NULL,
     Message TEXT NOT NULL,
-    SentAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (QueryID) REFERENCES Queries(QueryID) ON DELETE NULL
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (QueryID) REFERENCES Queries(QueryID) ON DELETE CASCADE
 );

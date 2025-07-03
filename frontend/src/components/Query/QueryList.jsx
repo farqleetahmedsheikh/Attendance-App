@@ -15,7 +15,7 @@ const QueryList = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [openQueryId, setOpenQueryId] = useState(null); // 👈 track open conversation
 
-  const students = useSelector((state) => state.students.students || []);
+  const teachers = useSelector((state) => state.teachers.teachers || []);
   const parents = useSelector((state) => state.parents.parents || []);
 
   const userId = parseInt(localStorage.getItem("userId") || 0);
@@ -45,9 +45,9 @@ const QueryList = () => {
     fetchQueriesAndMarkRead();
   }, [role, userId]);
 
-  const getStudentInfo = (id) => {
-    const student = students.find((s) => s.Std_ID === id);
-    return student ? `${student.Std_Name} (${student.Std_Email})` : "-";
+  const getTeacherInfo = (id) => {
+    const teacher = teachers.find((s) => s.TeacherID === id);
+    return teacher ? `${teacher.TeacherName} (${teacher.TeacherEmail})` : "-";
   };
 
   const getParentInfo = (id) => {
@@ -69,7 +69,7 @@ const QueryList = () => {
               <th>#</th>
               <th>Subject</th>
               <th>Message</th>
-              <th>Student</th>
+              <th>Teacher</th>
               <th>Parent</th>
               <th>Status</th>
               <th>Date</th>
@@ -86,7 +86,7 @@ const QueryList = () => {
                   <td>{index + 1}</td>
                   <td>{query.Subject}</td>
                   <td>{query.Message}</td>
-                  <td>{getStudentInfo(query.StudentID)}</td>
+                  <td>{getTeacherInfo(query.TeacherID)}</td>
                   <td>{getParentInfo(query.ParentID)}</td>
                   <td>{query.Status}</td>
                   <td>{new Date(query.CreatedAt).toLocaleString()}</td>

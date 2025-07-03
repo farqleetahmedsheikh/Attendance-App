@@ -90,7 +90,7 @@ const submitReply = (req, res) => {
   }
 
   const query = `
-    INSERT INTO QueryReplies (QueryID, SenderRole, SenderID, Message)
+    INSERT INTO QueryMessages (QueryID, SenderRole, SenderID, Message)
     VALUES (?, ?, ?, ?)
   `;
 
@@ -109,7 +109,7 @@ const getRepliesByQueryId = (req, res) => {
   const { queryId } = req.params;
 
   const query = `
-    SELECT * FROM QueryReplies
+    SELECT * FROM QueryMessages
     WHERE QueryID = ?
     ORDER BY CreatedAt ASC
   `;
