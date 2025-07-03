@@ -132,7 +132,7 @@ CREATE TABLE AttendanceTable (
     SubjectID INT NOT NULL,
     FOREIGN KEY (StudentID) REFERENCES Std_Table(Std_ID) ON DELETE CASCADE,
     FOREIGN KEY (SubjectID) REFERENCES SubjectTable(SubjectID) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 -- 13. Query Table (Conversation Threads)
 CREATE TABLE Queries (
