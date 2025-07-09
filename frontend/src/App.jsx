@@ -1,6 +1,7 @@
-/** @format */
+// App.jsx
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "../ProtectedRoute";
 import "./App.css";
 import Home from "./components/Home";
 import Contact from "./components/Contact";
@@ -22,6 +23,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<HomePage />} />
@@ -30,8 +32,15 @@ function App() {
         <Route path="/login/student" element={<Login role="student" />} />
         <Route path="/login/parent" element={<Login role="parent" />} />
 
-        {/* Admin dashboard with nested routes */}
-        <Route path="/dashboard" element={<AdminDashboard />}>
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        >
           <Route path="student/manage" element={<Student />} />
           <Route path="teacher/manage" element={<Teacher />} />
           <Route path="class/manage" element={<Class />} />

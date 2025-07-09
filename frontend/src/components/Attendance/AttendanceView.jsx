@@ -22,7 +22,6 @@ const AttendanceView = () => {
 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
-  const [filteredClasses, setFilteredClasses] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
   const [error, setError] = useState("");
 
@@ -39,6 +38,7 @@ const AttendanceView = () => {
   }, [role, students, userId]);
 
   // For teacher: filter subjects and classes
+  // For teacher: filter subjects and add class name to each subject
   useEffect(() => {
     if (
       role === "teacher" &&
@@ -51,8 +51,20 @@ const AttendanceView = () => {
       );
       if (!teacher) return;
 
-      const teacherSubjects = subjects.filter(
-        (subject) => Number(teacher.SubjectIDs) === Number(subject?.SubjectID)
+      // Handle SubjectIDs as array or single value
+      let subjectIds = [];
+      if (Array.isArray(teacher.SubjectIDs)) {
+        subjectIds = teacher.SubjectIDs.map(Number);
+      } else if (typeof teacher.SubjectIDs === "string") {
+        subjectIds = teacher.SubjectIDs.split(",").map((id) =>
+          Number(id.trim())
+        );
+      } else if (typeof teacher.SubjectIDs === "number") {
+        subjectIds = [teacher.SubjectIDs];
+      }
+
+      const teacherSubjects = subjects.filter((subject) =>
+        subjectIds.includes(Number(subject?.SubjectID))
       );
 
       const subjectsWithClassName = teacherSubjects.map((subject) => {
@@ -66,16 +78,8 @@ const AttendanceView = () => {
       });
 
       setFilteredSubjects(subjectsWithClassName);
-
-      const classIds = teacherSubjects.map((subj) => Number(subj.ClassID));
-      const matchedClasses = classes.filter((cls) =>
-        classIds.includes(Number(cls.ClassID))
-      );
-
-      setFilteredClasses(matchedClasses);
     }
   }, [role, userId, teachers, subjects, classes]);
-
   // For teacher: filter students based on selected subject
   useEffect(() => {
     if (role === "teacher" && filters.subjectId && subjects.length > 0) {
