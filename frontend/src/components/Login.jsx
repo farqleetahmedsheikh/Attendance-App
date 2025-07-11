@@ -33,10 +33,13 @@ const Login = ({ role }) => {
         draggable: true,
         theme: "light",
       });
+      console.log("Login data:", data); // Debugging line to check login response
 
       localStorage.setItem("token", data.token); // ✔️ store raw string only
       localStorage.setItem("role", data.role); // ✔️ store role in localStorage
       localStorage.setItem("userId", data.userId || data.id || data.ID); // ✔️ store user ID
+
+      console.log("Stored userId:", localStorage.getItem("userId")); // Debugging line to check stored userId
       setTimeout(() => {
         if (role === "admin") {
           navigate("/dashboard/class/manage");

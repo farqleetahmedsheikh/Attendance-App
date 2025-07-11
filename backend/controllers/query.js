@@ -52,9 +52,16 @@ const getAllQueries = (req, res) => {
 
 // --- MARK ALL AS READ ---
 const markAllAsRead = (req, res) => {
-  const query = `UPDATE Queries SET Status = 'Read' WHERE Status = 'Unread'`;
+  const userID = req.headers.userid; // Get UserID from headers (case-insensitive)
+  const role = req.headers.role; // Get role from headers
+  
+  if (role !== "teacher") {
+    return res.status(200);
+  }
+  console.log("Marking all queries as read for TeacherID:", userID, role);
+  const query = `UPDATE Queries SET Status = 'Read' WHERE Status = 'Unread' and TeacherID = ?`;
 
-  db.query(query, (err) => {
+  db.query(query, [userID], (err) => {
     if (err) {
       console.error("Error marking queries as read:", err);
       return res.status(500).json({ error: "Failed to update status" });
@@ -68,9 +75,11 @@ const markAllAsRead = (req, res) => {
 
 // --- GET UNREAD COUNT ---
 const getUnreadCount = (req, res) => {
-  const query = `SELECT COUNT(*) AS unreadCount FROM Queries WHERE Status = 'Unread'`;
+  const userID = req.headers.userid; // Get TeacherID from headers (case-insensitive)
+  console.log("Getting unread count for TeacherID:", userID);
+  const query = `SELECT COUNT(*) AS unreadCount FROM Queries WHERE Status = 'Unread' and TeacherID = ?`;
 
-  db.query(query, (err, result) => {
+  db.query(query, [userID], (err, result) => {
     if (err) {
       console.error("Error getting unread count:", err);
       return res.status(500).json({ error: "Failed to fetch unread count" });

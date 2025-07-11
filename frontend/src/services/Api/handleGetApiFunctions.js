@@ -9,6 +9,7 @@ import { setPTMs } from "../../redux/ptmSlice";
 // Remove useDispatch from here and do not call it at the top level
 
 const token = localStorage.getItem("token");
+const userID = localStorage.getItem("userId");
 const BASE_URL = "http://localhost:4000/api";
 
 const fetchClasses = async (dispatch) => {
@@ -111,6 +112,7 @@ const handleGetQueries = async () => {
     const res = await fetch(`${BASE_URL}/query/queries`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        userid: userID, // Include userID in headers
       },
     });
 
@@ -128,6 +130,7 @@ const handleGetUnreadCount = async () => {
     const res = await fetch(`${BASE_URL}/query/unread-count`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        userid : userID, // Include userID in headers
       },
     });
 

@@ -2,6 +2,10 @@
 
 const token = localStorage.getItem("token");
 console.log("Token:", token); // Debugging line to check if token is retrieved
+const role = localStorage.getItem("role");
+const userID = localStorage.getItem("userId");
+
+console.log(userID, "teacher userid");
 const BASE_URL = "http://localhost:4000/api";
 
 const handleAddTeacher = async (formData) => {
@@ -105,6 +109,8 @@ const handlePutRead = async () => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        role: role, // Include role in headers
+        userid : userID, // Include userID in headers
       },
     });
 

@@ -130,7 +130,7 @@ const StudentForm = () => {
           name="Std_B_Form"
           value={formData.Std_B_Form}
           onChange={handleChange}
-          placeholder="B-Form"
+          placeholder="CNIC"
           type="number"
           required
         />

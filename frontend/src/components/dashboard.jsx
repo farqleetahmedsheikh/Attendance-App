@@ -63,7 +63,7 @@ const AdminDashboard = () => {
                 onClick={() => toggleDropdown(section.title)}
               >
                 {section.title}
-                {section.title === "Queries" && unreadCount > 0 && (
+                {section.title === "Query" && unreadCount > 0 && (
                   <span className="unread-badge">{unreadCount}</span>
                 )}
                 ▾
