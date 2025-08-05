@@ -4,11 +4,13 @@ import { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = ({ role }) => {
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const Login = ({ role }) => {
 
     const data = await response.json();
     if (response.ok) {
-      toast.success("login Successfull", {
+      toast.success("Login Successful", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -33,13 +35,11 @@ const Login = ({ role }) => {
         draggable: true,
         theme: "light",
       });
-      console.log("Login data:", data); // Debugging line to check login response
 
-      localStorage.setItem("token", data.token); // ✔️ store raw string only
-      localStorage.setItem("role", data.role); // ✔️ store role in localStorage
-      localStorage.setItem("userId", data.userId || data.id || data.ID); // ✔️ store user ID
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("userId", data.userId || data.id || data.ID);
 
-      console.log("Stored userId:", localStorage.getItem("userId")); // Debugging line to check stored userId
       setTimeout(() => {
         if (role === "admin") {
           navigate("/dashboard/class/manage");
@@ -78,17 +78,24 @@ const Login = ({ role }) => {
             required
           />
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={Password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
+              value={Password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </span>
+          </div>
 
           <button type="submit">Login</button>
           <div style={{ marginTop: "15px" }}>
-            {/* <Link to="/forgot-password">Forget Password</Link> */}
             <span style={{ margin: "0 10px" }}>|</span>
             <Link to="/">Back to Home</Link>
           </div>
